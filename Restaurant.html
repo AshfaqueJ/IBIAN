@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>The Monarch Club | Royal Dining Restaurant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+
+    /* ============================================================
+       VARIABLES & RESET (Gold & Black Theme)
+    ============================================================ */
+
+    :root {
+      --pure-black:  #000000;
+      --deep-black:  #0a0a0a;
+      --rich-black:  #121212;
+      --gold:        #d4af37;
+      --gold-light:  #f5e18b;
+      --gold-dark:   #b58c1a;
+      --white-soft:  #f5f5f5;
+      --white-muted: #cccccc;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      background: var(--deep-black);
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+
+
+    /* ============================================================
+       NAVIGATION (FULLY FIXED - PC + MOBILE with proper underline)
+    ============================================================ */
+
+    .navigation {
+      height: 70px;
+      background: var(--pure-black);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      border-bottom: 1px solid var(--gold);
+      box-shadow: 0 2px 15px rgba(0,0,0,0.8);
+    }
+
+    .nav-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+      height: 100%;
+    }
+
+    .brand {
+      position: absolute;
+      padding-left: 8px;
+      float: left;
+      line-height: 70px;
+      left: 0;
+      margin-left:-10vw;
+    }
+
+    .brand a {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 48px;
+      font-family: "Brush Script MT", cursive;
+      transition: 0.3s;
+    }
+
+    .brand a:hover {
+      color: #fff2af;
+      filter: drop-shadow(0 0 5px var(--gold));
+    }
+
+    nav { float: right; }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      margin-right:-12vw;
+    }
+
+    nav ul li {
+      float: left;
+      position: relative;
+    }
+
+    nav ul li a {
+      display: block;
+      padding: 0 20px;
+      line-height: 69px;
+      background: var(--pure-black);
+      color: var(--white-soft);
+      text-decoration: none;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 18px;
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover { color: var(--gold); }
+
+    /* Underline animation - works perfectly on desktop */
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: translateX(-50%);
+      transition: width 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    nav ul li a:hover::after { width: calc(100% - 40px); }
+
+    nav > ul > li > a:not(:only-child) { padding-right: 35px; }
+
+    nav > ul > li > a:not(:only-child)::before {
+      content: "▾";
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%) rotate(0deg);
+      color: var(--gold);
+      font-size: 14px;
+      transition: transform 0.35s ease;
+    }
+
+    nav > ul > li.dropdown-open > a:not(:only-child)::before {
+      transform: translateY(-50%) rotate(-180deg);
+    }
+
+    .nav-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 100;
+      min-width: 230px;
+      background: var(--pure-black);
+      border: 1px solid rgba(212,175,55,0.4);
+      border-top: 2px solid var(--gold);
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.7);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scaleY(0.92);
+      transform-origin: top center;
+      pointer-events: none;
+      transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16,1,0.3,1), visibility 0.28s ease;
+    }
+
+    .nav-dropdown.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scaleY(1);
+      pointer-events: auto;
+    }
+
+    .nav-dropdown li {
+      float: none;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .nav-dropdown li:last-child { border-bottom: none; }
+
+    .nav-dropdown li a {
+      padding: 13px 22px;
+      line-height: 1.4;
+      font-size: 15px;
+      background: transparent;
+      color: var(--white-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.22s ease, color 0.22s ease, padding-left 0.22s ease;
+    }
+
+    .nav-dropdown li a::after { display: none; }
+
+    .nav-dropdown li a::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0;
+      transform: scale(0);
+      flex-shrink: 0;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .nav-dropdown li a:hover {
+      background: rgba(212,175,55,0.08);
+      color: var(--gold-light);
+      padding-left: 28px;
+    }
+
+    .nav-dropdown li a:hover::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .nav-mobile {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 70px;
+      height: 70px;
+      background: var(--pure-black);
+      border-bottom: 1px solid var(--gold);
+    }
+
+    #nav-toggle {
+      position: absolute;
+      left: 18px;
+      top: 22px;
+      cursor: pointer;
+      padding: 10px 35px 16px 0;
+      display: block;
+    }
+
+    #nav-toggle span,
+    #nav-toggle span::before,
+    #nav-toggle span::after {
+      height: 5px;
+      width: 35px;
+      background: var(--gold);
+      position: absolute;
+      display: block;
+      content: "";
+      transition: 0.3s;
+    }
+
+    #nav-toggle span::before { top: -10px; }
+    #nav-toggle span::after  { bottom: -10px; }
+
+    #nav-toggle.active span           { background: transparent; }
+    #nav-toggle.active span::before   { transform: rotate(45deg);  top: 0; }
+    #nav-toggle.active span::after    { transform: rotate(-45deg); top: 0; }
+
+    /* Mobile styles - FIXED underline position */
+    @media (max-width: 798px) {
+      .nav-mobile { display: block; }
+      .navigation { height: 70px; overflow: visible; }
+      nav { float: none; }
+
+      /* The top-level menu */
+      nav ul.nav-list {
+        max-height: 0;
+        overflow: hidden;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background: var(--pure-black);
+        border-top: 1px solid rgba(212,175,55,0.3);
+        z-index: 999;
+        transition: max-height 0.35s ease;
+      }
+      nav ul.nav-list.nav-open { max-height: 600px; }
+
+      nav ul.nav-list > li { 
+        float: none; 
+        border-bottom: 1px solid #333; 
+        width: 100%; 
+      }
+      nav ul.nav-list > li > a { 
+        padding: 15px 20px; 
+        line-height: 24px;  /* Adjusted line-height for mobile */
+      }
+      
+      /* FIXED: Reposition the underline for mobile - bottom relative to padding */
+      nav ul.nav-list > li > a::after {
+        bottom: 12px;  /* Adjusted from 18px to 12px for mobile line-height */
+      }
+      
+      nav ul.nav-list > li > a:hover::after {
+        width: calc(100% - 40px);
+      }
+
+      /* Keep the dropdown indicator properly positioned */
+      nav > ul > li > a:not(:only-child)::before {
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      /* Sub-dropdowns */
+      .nav-dropdown {
+        position: static;
+        width: 100%;
+        background: #111;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        pointer-events: none;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease;
+      }
+      .nav-dropdown.open {
+        max-height: 300px;
+        pointer-events: auto;
+      }
+    }
+
+
+    /* ============================================================
+       RESTAURANT PAGE STYLES
+    ============================================================ */
+
+    .restaurant-hero {
+      margin-top: 70px;
+      height: 60vh;
+      min-height: 450px;
+      background: linear-gradient(135deg, #0a0a0a 0%, #000000 100%), url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600');
+      background-blend-mode: overlay;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-bottom: 1px solid rgba(212,175,55,0.4);
+    }
+
+    .restaurant-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 30%, rgba(212,175,55,0.1) 0%, transparent 80%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-content h1 {
+      font-size: 5rem;
+      font-family: Georgia, serif;
+      background: linear-gradient(135deg, var(--gold), #f3e3a2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 20px;
+    }
+
+    .gold-divider {
+      width: 100px;
+      height: 3px;
+      background: var(--gold);
+      margin: 20px auto;
+    }
+
+    .section-padding {
+      padding: 100px 24px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 3rem;
+      font-family: Georgia, serif;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--white-muted);
+      max-width: 700px;
+      margin: 0 auto 60px;
+      font-size: 1.1rem;
+    }
+
+    .ambience-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+
+    .ambience-card {
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(212,175,55,0.3);
+      transition: all 0.4s ease;
+      background: var(--rich-black);
+      cursor: pointer;
+    }
+
+    .ambience-card:hover {
+      transform: translateY(-10px);
+      border-color: var(--gold);
+      box-shadow: 0 20px 35px rgba(212,175,55,0.2);
+    }
+
+    .ambience-card img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    .ambience-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .ambience-card .caption {
+      padding: 20px;
+      text-align: center;
+      color: var(--gold-light);
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .chef-section {
+      background: linear-gradient(145deg, #030303 0%, var(--deep-black) 100%);
+      border-top: 1px solid rgba(212,175,55,0.2);
+      border-bottom: 1px solid rgba(212,175,55,0.2);
+    }
+
+    .chef-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+
+    .chef-image {
+      flex: 1;
+      border-radius: 30px;
+      overflow: hidden;
+      border: 2px solid rgba(212,175,55,0.5);
+    }
+
+    .chef-image img {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+    }
+
+    .chef-text {
+      flex: 1;
+    }
+
+    .chef-text h2 {
+      font-size: 2.5rem;
+      color: var(--gold);
+      font-family: Georgia, serif;
+      margin-bottom: 20px;
+    }
+
+    .chef-text .chef-title {
+      color: var(--gold-light);
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      margin-bottom: 25px;
+    }
+
+    .chef-text p {
+      color: #ddd;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .signature-dish {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 8px 20px;
+      border-left: 3px solid var(--gold);
+      background: rgba(212,175,55,0.1);
+      font-style: italic;
+    }
+
+    .menu-section {
+      background: var(--deep-black);
+      padding: 80px 24px;
+    }
+
+    .page_title {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .page_title h1 {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 3rem;
+      font-family: Georgia, serif;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 15px;
+    }
+
+    .page_title h1::before {
+      background: var(--gold);
+      width: 70px;
+      height: 2px;
+      position: absolute;
+      content: '';
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .page_title h1::after {
+      position: absolute;
+      content: '';
+      background: var(--gold-light);
+      width: 30px;
+      height: 2px;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .menu_tab {
+      margin: 0 auto;
+      justify-content: center;
+      border-bottom: none;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .nav-tabs .nav-link {
+      background: transparent;
+      border: 1.5px solid rgba(212,175,55,0.5);
+      color: var(--white-muted);
+      padding: 12px 32px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-tabs .nav-link.active {
+      background: var(--gold);
+      color: #000000;
+      border-color: var(--gold);
+    }
+
+    .nav-tabs .nav-link:hover {
+      background: var(--gold);
+      color: #000;
+      border-color: var(--gold);
+    }
+
+    .single_menu {
+      position: relative;
+      margin-bottom: 50px;
+      transition: .3s;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: var(--rich-black);
+      padding: 15px;
+      border-radius: 20px;
+      border: 1px solid rgba(212,175,55,0.2);
+    }
+
+    .single_menu:hover {
+      border-color: var(--gold);
+      transform: translateX(8px);
+      background: #1a1a1a;
+    }
+
+    .single_menu img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid var(--gold);
+    }
+
+    .menu_content {
+      flex: 1;
+    }
+
+    .menu_content h4 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      border-bottom: 1px dashed var(--gold);
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      color: var(--gold-light);
+      font-family: Georgia, serif;
+    }
+
+    .menu_content h4 span {
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .menu_content p {
+      font-weight: 400;
+      font-size: 0.85rem;
+      color: #aaa;
+    }
+
+    .menu_btn {
+      margin: 40px auto 0;
+      display: block;
+      width: 200px;
+      text-align: center;
+      background: transparent;
+      border: 2px solid var(--gold);
+      color: var(--gold);
+      padding: 14px 28px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .menu_btn:hover {
+      background: var(--gold);
+      color: #000;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(212,175,55,0.3);
+    }
+
+    /* Gallery Modal */
+    .gallery-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.96);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(12px);
+    }
+
+    .gallery-modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .modal-main-img {
+      max-width: 80vw;
+      max-height: 65vh;
+      object-fit: contain;
+      border: 2px solid var(--gold);
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+
+    .thumbnail-strip {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      max-width: 80vw;
+      padding: 15px;
+      background: rgba(0,0,0,0.7);
+      border-radius: 50px;
+      scrollbar-width: thin;
+    }
+
+    .thumbnail-strip::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .thumbnail-strip::-webkit-scrollbar-track {
+      background: #222;
+    }
+
+    .thumbnail-strip::-webkit-scrollbar-thumb {
+      background: var(--gold);
+      border-radius: 4px;
+    }
+
+    .thumbnail {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .thumbnail:hover {
+      transform: scale(1.05);
+      border-color: var(--gold);
+    }
+
+    .thumbnail.active-thumb {
+      border-color: var(--gold);
+      box-shadow: 0 0 10px rgba(212,175,55,0.5);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 25px;
+      right: 40px;
+      font-size: 48px;
+      color: var(--gold);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .modal-close:hover {
+      transform: scale(1.2);
+      color: #fff;
+    }
+
+    .modal-caption {
+      margin-top: 15px;
+      color: var(--gold-light);
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    /* Full Menu Modal */
+    .fullmenu-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.98);
+      z-index: 2100;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .fullmenu-modal.active {
+      display: flex;
+    }
+
+    .fullmenu-content {
+      background: var(--rich-black);
+      max-width: 600px;
+      width: 90%;
+      max-height: 85vh;
+      overflow-y: auto;
+      border-radius: 28px;
+      border: 1px solid var(--gold);
+      padding: 30px;
+    }
+
+    .fullmenu-content h2 {
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .fullmenu-category {
+      margin-bottom: 25px;
+    }
+
+    .fullmenu-category h3 {
+      color: var(--gold-light);
+      border-left: 3px solid var(--gold);
+      padding-left: 15px;
+      margin-bottom: 15px;
+    }
+
+    .fullmenu-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dotted rgba(212,175,55,0.3);
+    }
+
+    .fullmenu-item .item-name {
+      color: #ddd;
+    }
+
+    .fullmenu-item .item-price {
+      color: var(--gold);
+      font-weight: bold;
+    }
+
+    .close-fullmenu {
+      display: block;
+      margin: 20px auto 0;
+      background: var(--gold);
+      color: #000;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 40px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .single_menu { flex-direction: column; text-align: center; }
+      .hero-content h1 { font-size: 2.5rem; }
+      .thumbnail { width: 60px; height: 60px; }
+    }
+
+    /* FOOTER */
+    .site-footer {
+      background: var(--pure-black);
+      border-top: 2px solid var(--gold);
+      position: relative;
+      z-index: 3;
+      font-family: Georgia, serif;
+    }
+
+    .footer-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 40px 50px;
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: 50px;
+    }
+
+    .footer-brand .footer-logo {
+      filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(320deg);
+      width: 150px;
+      display: block;
+      margin-bottom: 18px;
+    }
+
+    .footer-brand p {
+      color: #888;
+      font-size: 0.88rem;
+      line-height: 1.75;
+      font-family: Arial, sans-serif;
+      max-width: 240px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .footer-social a {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(212,175,55,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.25s;
+    }
+
+    .footer-social a img {
+      width: 18px;
+      filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(320deg);
+      transition: 0.25s;
+    }
+
+    .footer-social a:hover { background: var(--gold); border-color: var(--gold); }
+    .footer-social a:hover img { filter: brightness(0); }
+
+    .footer-col h4 {
+      color: var(--gold);
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      font-family: Arial, sans-serif;
+      font-weight: 700;
+    }
+
+    .footer-col h4::after {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 2px;
+      background: var(--gold);
+      margin-top: 8px;
+      opacity: 0.5;
+    }
+
+    .footer-links-list { list-style: none; }
+    .footer-links-list li { margin-bottom: 10px; }
+    .footer-links-list a {
+      color: #999;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-family: Arial, sans-serif;
+      display: inline-block;
+      transition: color 0.2s, padding-left 0.2s;
+    }
+
+    .footer-links-list a:hover { color: var(--gold-light); padding-left: 6px; }
+
+    .footer-contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+      font-family: Arial, sans-serif;
+    }
+
+    .footer-contact-item i {
+      color: var(--gold);
+      font-size: 0.95rem;
+      margin-top: 3px;
+      width: 16px;
+      flex-shrink: 0;
+    }
+
+    .footer-contact-item span,
+    .footer-contact-item a {
+      color: #999;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-contact-item a:hover { color: var(--gold-light); }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 40px;
+      border-top: 1px solid rgba(212,175,55,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-bottom p {
+      color: #555;
+      font-size: 0.82rem;
+      font-family: Arial, sans-serif;
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-bottom-links a {
+      color: #555;
+      font-size: 0.82rem;
+      font-family: Arial, sans-serif;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-bottom-links a:hover { color: var(--gold); }
+
+    @media (max-width: 1000px) {
+      .footer-body { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .footer-brand { grid-column: 1 / -1; }
+      .footer-brand p { max-width: 100%; }
+    }
+    @media (max-width: 600px) {
+      .footer-body { grid-template-columns: 1fr; padding: 40px 24px 36px; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .chef-container { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<section class="navigation">
+  <div class="nav-container">
+    <div class="brand"><a href="index.html">EBM</a></div>
+    <nav>
+      <div class="nav-mobile"><a id="nav-toggle" href="#!"><span></span></a></div>
+      <ul class="nav-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#!">Club Stories</a>
+          <ul class="nav-dropdown">
+            <li><a href="Our%20History.html">Our History</a></li>
+            <li><a href="Founding%20Members.html">About the Founders</a></li>
+            <li><a href="Our%20History.html">About Us</a></li>
+          </ul>
+        </li>
+        <li><a href="#!">Our People</a>
+          <ul class="nav-dropdown">
+            <li><a href="Members.html">Meet the Curators</a></li>
+            <li><a href="Partners.html">Friends & Partners</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Restaurant</a></li>
+        <li><a href="#!">Facilities</a>
+          <ul class="nav-dropdown">
+            <li><a href="Gym.html">Gym and Fitness</a></li>
+            <li><a href="Pool.html">Pool Arrangements</a></li>
+            <li><a href="Game%20Room.html">Sports and Games</a></li>
+          </ul>
+        </li>
+        <li><a href="Contact%20Us.html">Contact Us</a></li>
+        <li><a href="Membership%20Form.html">Membership <i class="fas fa-arrow-right"></i></a></li>
+      </ul>
+    </nav>
+  </div>
+</section>
+
+<!-- REST OF THE PAGE CONTENT (SAME AS BEFORE) -->
+<section class="restaurant-hero">
+  <div class="hero-content">
+    <h1>Royal Dining</h1>
+    <div class="gold-divider"></div>
+    <p>Where heritage meets haute cuisine — an exclusive culinary sanctuary</p>
+  </div>
+</section>
+
+<section class="section-padding">
+  <div class="container" style="max-width: 1400px; margin: 0 auto;">
+    <h2 class="section-title">The Ambience</h2>
+    <p class="section-subtitle">Step into a world of refined elegance — where warm golden light, velvet textures, and timeless design create an unforgettable dining experience.</p>
+    <div class="ambience-gallery" id="ambienceGallery"></div>
+  </div>
+</section>
+
+<section class="chef-section section-padding">
+  <div class="chef-container">
+    <div class="chef-image">
+      <img src="https://images.unsplash.com/photo-1583394293214-28ded15ee548?w=800" alt="Executive Chef">
+    </div>
+    <div class="chef-text">
+      <h2>Chef Kazi Anwar</h2>
+      <div class="chef-title">CULINARY DIRECTOR | MASTER OF BENGALI GASTRONOMY</div>
+      <p>Hailing from the historic culinary traditions of Dhaka, Chef Kazi Anwar brings the soul of Bangladesh to The Monarch Club. With over 18 years of experience in Michelin-starred kitchens across London, Dubai, and Dhaka, Chef Anwar masterfully weaves the intricate spices, slow-cooked delicacies, and forgotten recipes of his homeland into a contemporary fine-dining tapestry.</p>
+      <p>His philosophy honors the "Mughal-Bengali" fusion — fragrant biryanis, mustard-infused seafood, and caramelized sweets — while embracing modern plating and seasonal ingredients.</p>
+      <div class="signature-dish">🍛 Signature: Royal Ilish Pulao & Mango Mustard Glaze</div>
+    </div>
+  </div>
+</section>
+
+<section class="menu-section">
+  <div class="container">
+    <div class="page_title"><h1>Our Menu</h1></div>
+    <ul class="nav nav-tabs menu_tab mb-5" id="myTab" role="tablist">
+      <li class="nav-item"><a class="nav-link active" id="breakfast-tab" data-bs-toggle="tab" href="#breakfast">Breakfast</a></li>
+      <li class="nav-item"><a class="nav-link" id="lunch-tab" data-bs-toggle="tab" href="#lunch">Lunch</a></li>
+      <li class="nav-item"><a class="nav-link" id="dinner-tab" data-bs-toggle="tab" href="#dinner">Dinner</a></li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="breakfast"><div class="row" id="breakfastMenu"></div></div>
+      <div class="tab-pane fade" id="lunch"><div class="row" id="lunchMenu"></div></div>
+      <div class="tab-pane fade" id="dinner"><div class="row" id="dinnerMenu"></div></div>
+    </div>
+    <button class="menu_btn" id="fullMenuBtn">Full Menu</button>
+  </div>
+</section>
+
+<div id="galleryModal" class="gallery-modal">
+  <span class="modal-close">&times;</span>
+  <div class="modal-content">
+    <img class="modal-main-img" id="modalMainImg" src="" alt="Gallery">
+    <div class="thumbnail-strip" id="thumbnailStrip"></div>
+    <div class="modal-caption" id="modalCaption"></div>
+  </div>
+</div>
+
+<div id="fullMenuModal" class="fullmenu-modal">
+  <div class="fullmenu-content">
+    <h2>Complete Menu</h2>
+    <div class="fullmenu-category"><h3>Breakfast</h3><div id="fullBreakfast"></div></div>
+    <div class="fullmenu-category"><h3>Lunch</h3><div id="fullLunch"></div></div>
+    <div class="fullmenu-category"><h3>Dinner</h3><div id="fullDinner"></div></div>
+    <button class="close-fullmenu">Close</button>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-body">
+    <div class="footer-col footer-brand">
+      <img class="footer-logo" src="Logo%20Post.png" alt="The Monarch Club Logo">
+      <p>A premier social club dedicated to excellence, connection, and unforgettable experiences — serving members for over 25 years.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Facebook"><img src="Facebook.png" alt="Facebook"></a>
+        <a href="#" aria-label="Instagram"><img src="Instagram.png" alt="Instagram"></a>
+        <a href="#" aria-label="Twitter"><img src="Twitter.png" alt="Twitter"></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul class="footer-links-list">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Club Stories</a></li>
+        <li><a href="#">Meet the Curators</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Milestones</a></li>
+        <li><a href="#">Partnerships</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul class="footer-links-list">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+        <li><a href="#">Club Rules</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>1 Monarch Lane<br>Beverly Hills, California</span></div>
+      <div class="footer-contact-item"><i class="fas fa-phone"></i><a href="tel:+15555555555">+1 555 555 5555</a></div>
+      <div class="footer-contact-item"><i class="fas fa-envelope"></i><a href="mailto:concierge@monarchclub.com">concierge@monarchclub.com</a></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2015 The Monarch Club. All rights reserved.</p>
+    <div class="footer-bottom-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Membership</a></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // ============================================================
+  // NAVIGATION DROPDOWN
+  // ============================================================
+  (function() {
+    const isMobile = () => window.innerWidth <= 798;
+    const toggleBtn = document.getElementById("nav-toggle");
+    const navList = document.querySelector("ul.nav-list");
+
+    if (toggleBtn && navList) {
+      toggleBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleBtn.classList.toggle("active");
+        navList.classList.toggle("nav-open");
+      });
+    }
+
+    document.querySelectorAll('nav ul li > a:not(:only-child)').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const parent = this.parentElement;
+        const dropdown = this.nextElementSibling;
+        const isOpen = dropdown && dropdown.classList.contains('open');
+
+        document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+        document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('dropdown-open'));
+
+        if (!isOpen && dropdown) {
+          dropdown.classList.add('open');
+          parent.classList.add('dropdown-open');
+        }
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.navigation')) {
+        document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+        document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('dropdown-open'));
+        if (isMobile() && navList) {
+          navList.classList.remove('nav-open');
+          if (toggleBtn) toggleBtn.classList.remove('active');
+        }
+      }
+    });
+  })();
+
+  // GALLERY DATA
+  const gallerySpaces = [
+    { name: "Grand Dining Hall", images: ["https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800", "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800", "https://images.unsplash.com/photo-1528605105345-5344ea20e269?w=800"], desc: "Elegant chandeliers and rich mahogany" },
+    { name: "Private Lounge", images: ["https://images.unsplash.com/photo-1528605105345-5344ea20e269?w=800", "https://images.unsplash.com/photo-1519167758481-83d550d49b93?w=800", "https://images.unsplash.com/photo-1566417713940-abfe2348ee2f?w=800"], desc: "Intimate velvet seating and golden accents" },
+    { name: "Terrace & Bar", images: ["https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800", "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800", "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800"], desc: "Al fresco dining with skyline views" }
+  ];
+
+  function buildAmbienceGallery() {
+    const container = document.getElementById('ambienceGallery');
+    if (!container) return;
+    container.innerHTML = gallerySpaces.map((space, idx) => `
+      <div class="ambience-card" data-gallery-index="${idx}">
+        <img src="${space.images[0]}" alt="${space.name}">
+        <div class="caption">${space.name}</div>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll('.ambience-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = parseInt(card.dataset.galleryIndex);
+        openGalleryModal(idx);
+      });
+    });
+  }
+
+  let currentGallerySpace = null;
+  let currentImageIdx = 0;
+
+  function openGalleryModal(spaceIdx) {
+    currentGallerySpace = gallerySpaces[spaceIdx];
+    currentImageIdx = 0;
+    updateModalContent();
+    document.getElementById('galleryModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function updateModalContent() {
+    if (!currentGallerySpace) return;
+    document.getElementById('modalMainImg').src = currentGallerySpace.images[currentImageIdx];
+    document.getElementById('modalCaption').innerHTML = `${currentGallerySpace.name} — ${currentGallerySpace.desc}`;
+    
+    const strip = document.getElementById('thumbnailStrip');
+    strip.innerHTML = currentGallerySpace.images.map((img, i) => `
+      <img class="thumbnail ${i === currentImageIdx ? 'active-thumb' : ''}" src="${img}" data-thumb-index="${i}">
+    `).join('');
+    
+    document.querySelectorAll('.thumbnail').forEach(thumb => {
+      thumb.addEventListener('click', (e) => {
+        currentImageIdx = parseInt(thumb.dataset.thumbIndex);
+        updateModalContent();
+      });
+    });
+  }
+
+  function closeGalleryModal() {
+    document.getElementById('galleryModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // MENU DATA
+  const menuData = {
+    breakfast: [
+      { name: "Shahi Breakfast Platter", price: "$28", desc: "Naan bread, mutton curry, spiced chickpeas" },
+      { name: "Monarch's Black Coffee", price: "$12", desc: "Ethiopian Yirgacheffe" },
+      { name: "Panta Ilish", price: "$24", desc: "Fermented rice with fried Hilsa" },
+      { name: "Eggs Royale", price: "$22", desc: "Smoked salmon, poached eggs" },
+      { name: "Kala Bhuna", price: "$26", desc: "Slow-cooked beef shoulder" },
+      { name: "Jasmine Green Tea", price: "$9", desc: "Premium loose-leaf" }
+    ],
+    lunch: [
+      { name: "Royal Mutton Biryani", price: "$38", desc: "Fragrant basmati, saffron" },
+      { name: "Shorshe Ilish", price: "$32", desc: "Mustard gravy Hilsa" },
+      { name: "Masoor Daal", price: "$14", desc: "Tempered red lentils" },
+      { name: "Chicken Chaap", price: "$28", desc: "Slow-roasted in yogurt gravy" },
+      { name: "Bangladeshi Thali", price: "$26", desc: "Five vegetable dishes" },
+      { name: "Mango Lassi", price: "$10", desc: "Sweet yogurt drink" }
+    ],
+    dinner: [
+      { name: "Lobster Malai Curry", price: "$58", desc: "Coconut and turmeric broth" },
+      { name: "Kacchi Biryani", price: "$42", desc: "Raw marinated mutton" },
+      { name: "Chingri Malaikari", price: "$36", desc: "Prawns in coconut sauce" },
+      { name: "Beef Tehari", price: "$34", desc: "Dhaka-style spiced rice" },
+      { name: "Mishti Doi", price: "$12", desc: "Caramelized yogurt" },
+      { name: "Spiced Masala Chai", price: "$8", desc: "Ginger and cardamom" }
+    ]
+  };
+
+  function buildMenuItems(category, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const items = menuData[category];
+    const cols = [[], []];
+    items.forEach((item, idx) => {
+      cols[idx % 2].push(item);
+    });
+    container.innerHTML = cols.map(col => `
+      <div class="col-md-6">
+        ${col.map(item => `
+          <div class="single_menu">
+            <img src="https://i.imgur.com/kbpceNv.jpg">
+            <div class="menu_content">
+              <h4>${item.name}<span>${item.price}</span></h4>
+              <p>${item.desc}</p>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+  }
+
+  function buildFullMenuModal() {
+    const breakfastDiv = document.getElementById('fullBreakfast');
+    const lunchDiv = document.getElementById('fullLunch');
+    const dinnerDiv = document.getElementById('fullDinner');
+    
+    if (breakfastDiv) {
+      breakfastDiv.innerHTML = menuData.breakfast.map(i => `
+        <div class="fullmenu-item">
+          <span class="item-name">${i.name}</span>
+          <span class="item-price">${i.price}</span>
+        </div>
+      `).join('');
+    }
+    if (lunchDiv) {
+      lunchDiv.innerHTML = menuData.lunch.map(i => `
+        <div class="fullmenu-item">
+          <span class="item-name">${i.name}</span>
+          <span class="item-price">${i.price}</span>
+        </div>
+      `).join('');
+    }
+    if (dinnerDiv) {
+      dinnerDiv.innerHTML = menuData.dinner.map(i => `
+        <div class="fullmenu-item">
+          <span class="item-name">${i.name}</span>
+          <span class="item-price">${i.price}</span>
+        </div>
+      `).join('');
+    }
+  }
+
+  document.getElementById('fullMenuBtn')?.addEventListener('click', () => {
+    document.getElementById('fullMenuModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+  
+  document.querySelector('.close-fullmenu')?.addEventListener('click', () => {
+    document.getElementById('fullMenuModal').classList.remove('active');
+    document.body.style.overflow = '';
+  });
+  
+  document.getElementById('fullMenuModal')?.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('fullMenuModal')) {
+      document.getElementById('fullMenuModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+  
+  document.querySelector('.modal-close')?.addEventListener('click', closeGalleryModal);
+  
+  document.getElementById('galleryModal')?.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('galleryModal')) closeGalleryModal();
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    buildAmbienceGallery();
+    buildMenuItems('breakfast', 'breakfastMenu');
+    buildMenuItems('lunch', 'lunchMenu');
+    buildMenuItems('dinner', 'dinnerMenu');
+    buildFullMenuModal();
+  });
+</script>
+</body>
+</html>

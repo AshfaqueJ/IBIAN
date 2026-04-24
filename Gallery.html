@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>The Monarch Club | Prestige Gallery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+
+    /* ============================================================
+       VARIABLES & RESET
+    ============================================================ */
+
+    :root {
+      --pure-black:  #000000;
+      --deep-black:  #0a0a0a;
+      --rich-black:  #121212;
+      --gold:        #d4af37;
+      --gold-light:  #f5e18b;
+      --gold-dark:   #b58c1a;
+      --white-soft:  #f5f5f5;
+      --white-muted: #cccccc;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background: var(--deep-black);
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+
+
+    /* ============================================================
+       NAVIGATION (identical to original)
+    ============================================================ */
+
+    .navigation {
+      height: 70px;
+      background: var(--pure-black);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      border-bottom: 1px solid var(--gold);
+      box-shadow: 0 2px 15px rgba(0,0,0,0.8);
+    }
+
+    .nav-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      position: absolute;
+      padding-left: 8px;
+      float: left;
+      line-height: 70px;
+      margin-left:-10vw;
+    }
+
+    .brand a {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 48px;
+      font-family: "Brush Script MT", cursive;
+      transition: 0.3s;
+    }
+
+    .brand a:hover {
+      color: #fff2af;
+      filter: drop-shadow(0 0 5px var(--gold));
+    }
+
+    nav { float: right; }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      margin-right:-12vw;
+    }
+
+    nav ul li {
+      float: left;
+      position: relative;
+    }
+
+    nav ul li a {
+      display: block;
+      padding: 0 20px;
+      line-height: 69px;
+      background: var(--pure-black);
+      color: var(--white-soft);
+      text-decoration: none;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 18px;
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover { color: var(--gold); }
+
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: translateX(-50%);
+      transition: width 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    nav ul li a:hover::after { width: calc(100% - 40px); }
+
+    nav > ul > li > a:not(:only-child) { padding-right: 35px; }
+
+    nav > ul > li > a:not(:only-child)::before {
+      content: "▾";
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%) rotate(0deg);
+      color: var(--gold);
+      font-size: 14px;
+      transition: transform 0.35s ease;
+    }
+
+    nav > ul > li.dropdown-open > a:not(:only-child)::before {
+      transform: translateY(-50%) rotate(-180deg);
+    }
+
+    .nav-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 100;
+      min-width: 230px;
+      background: var(--pure-black);
+      border: 1px solid rgba(212,175,55,0.4);
+      border-top: 2px solid var(--gold);
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.7);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scaleY(0.92);
+      transform-origin: top center;
+      pointer-events: none;
+      transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16,1,0.3,1), visibility 0.28s ease;
+    }
+
+    .nav-dropdown.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scaleY(1);
+      pointer-events: auto;
+    }
+
+    .nav-dropdown li {
+      float: none;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .nav-dropdown li:last-child { border-bottom: none; }
+
+    .nav-dropdown li a {
+      padding: 13px 22px;
+      line-height: 1.4;
+      font-size: 15px;
+      background: transparent;
+      color: var(--white-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.22s ease, color 0.22s ease, padding-left 0.22s ease;
+    }
+
+    .nav-dropdown li a::after { display: none; }
+
+    .nav-dropdown li a::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0;
+      transform: scale(0);
+      flex-shrink: 0;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .nav-dropdown li a:hover {
+      background: rgba(212,175,55,0.08);
+      color: var(--gold-light);
+      padding-left: 28px;
+    }
+
+    .nav-dropdown li a:hover::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .nav-mobile {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 70px;
+      height: 70px;
+      background: var(--pure-black);
+      border-bottom: 1px solid var(--gold);
+    }
+
+    #nav-toggle {
+      position: absolute;
+      left: 18px;
+      top: 22px;
+      cursor: pointer;
+      padding: 10px 35px 16px 0;
+      display: block;
+    }
+
+    #nav-toggle span,
+    #nav-toggle span::before,
+    #nav-toggle span::after {
+      height: 5px;
+      width: 35px;
+      background: var(--gold);
+      position: absolute;
+      display: block;
+      content: "";
+      transition: 0.3s;
+    }
+
+    #nav-toggle span::before { top: -10px; }
+    #nav-toggle span::after  { bottom: -10px; }
+
+    #nav-toggle.active span           { background: transparent; }
+    #nav-toggle.active span::before   { transform: rotate(45deg);  top: 0; }
+    #nav-toggle.active span::after    { transform: rotate(-45deg); top: 0; }
+
+
+    /* ============================================================
+       FANCY GALLERY PAGE CORE STYLES
+    ============================================================ */
+
+    .gallery-hero {
+      margin-top: 70px;
+      height: 55vh;
+      min-height: 420px;
+      background: radial-gradient(circle at 30% 10%, #0a0a0a 0%, #000000 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-bottom: 1px solid rgba(212,175,55,0.3);
+      overflow: hidden;
+    }
+
+    .gallery-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(45deg, rgba(212,175,55,0.02) 0px, rgba(212,175,55,0.02) 2px, transparent 2px, transparent 8px);
+      pointer-events: none;
+    }
+
+    .hero-gold-frame {
+      max-width: 1100px;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+      animation: fadeSlideUp 0.9s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+
+    .hero-gold-frame h1 {
+      font-size: 5rem;
+      font-family: Georgia, serif;
+      background: linear-gradient(135deg, var(--gold), #f3e3a2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-gold-frame .hero-line {
+      width: 120px;
+      height: 3px;
+      background: var(--gold);
+      margin: 24px auto 20px;
+    }
+
+    .hero-gold-frame p {
+      font-size: 1.3rem;
+      color: #cccccc;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    @keyframes fadeSlideUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Gallery Masonry Grid - FIXED */
+    .gallery-master {
+      background: var(--deep-black);
+      padding: 80px 24px 120px;
+    }
+
+    .gallery-container-fancy {
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1.5px solid rgba(212,175,55,0.5);
+      padding: 10px 32px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--white-muted);
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #000000;
+      box-shadow: 0 0 18px rgba(212,175,55,0.5);
+      transform: translateY(-2px);
+    }
+
+    /* FIXED: Proper masonry grid with visible first item */
+    .masonry-grid {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -15px;
+    }
+
+    .grid-item {
+      width: calc(33.333% - 30px);
+      margin: 15px;
+      background: var(--rich-black);
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(212,175,55,0.25);
+      transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .grid-item:hover {
+      transform: translateY(-12px) scale(1.02);
+      border-color: var(--gold);
+      box-shadow: 0 30px 50px -20px rgba(0,0,0,0.9), 0 0 0 1px rgba(212,175,55,0.4);
+    }
+
+    .grid-item-img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      transition: transform 0.7s ease;
+    }
+
+    .grid-item:hover .grid-item-img {
+      transform: scale(1.05);
+    }
+
+    .grid-overlay {
+      padding: 20px 24px 26px;
+      background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(18,18,18,0.98) 100%);
+    }
+
+    .grid-overlay h3 {
+      color: var(--gold-light);
+      font-size: 1.4rem;
+      font-family: Georgia, serif;
+      margin-bottom: 8px;
+    }
+
+    .grid-overlay p {
+      color: #aaa;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .grid-overlay i {
+      color: var(--gold);
+    }
+
+    .item-category-badge {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      padding: 5px 14px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      color: var(--gold);
+      border-left: 2px solid var(--gold);
+      z-index: 3;
+    }
+    
+    @media (max-width: 1250px) {
+      
+      .brand{
+        margin-left:2vw;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .grid-item { width: calc(50% - 30px); }
+    }
+    @media (max-width: 768px) {
+      .grid-item { width: calc(100% - 30px); }
+      .hero-gold-frame h1 { font-size: 2.8rem; }
+      .filter-btn { padding: 6px 20px; font-size: 0.7rem; }
+    }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.97);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      backdrop-filter: blur(16px);
+    }
+
+    .lightbox.active { display: flex; }
+
+    .lightbox-img {
+      max-width: 85%;
+      max-height: 80%;
+      object-fit: contain;
+      border: 2px solid var(--gold);
+      border-radius: 20px;
+    }
+
+    .lightbox-caption {
+      margin-top: 28px;
+      color: var(--gold-light);
+      font-size: 1.25rem;
+      text-align: center;
+      max-width: 80%;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 30px;
+      right: 50px;
+      font-size: 52px;
+      color: var(--gold);
+      cursor: pointer;
+    }
+    .lightbox-close:hover { transform: scale(1.2); color: #fff; }
+
+    .lightbox-prev,
+    .lightbox-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 60px;
+      height: 60px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--gold);
+      font-size: 44px;
+      border: 1px solid rgba(212,175,55,0.6);
+    }
+    .lightbox-prev { left: 30px; }
+    .lightbox-next { right: 30px; }
+    .lightbox-prev:hover,
+    .lightbox-next:hover { background: var(--gold); color: black; }
+
+    /* FOOTER */
+    .site-footer {
+      background: var(--pure-black);
+      border-top: 2px solid var(--gold);
+      font-family: Georgia, serif;
+    }
+    .footer-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 40px 50px;
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: 50px;
+    }
+    .footer-brand .footer-logo {
+      filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(320deg);
+      width: 150px;
+      margin-bottom: 18px;
+    }
+    .footer-brand p {
+      color: #888;
+      font-size: 0.88rem;
+      max-width: 240px;
+    }
+    .footer-social {
+      display: flex;
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .footer-social a {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(212,175,55,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.25s ease;
+    }
+    .footer-social a img {
+      width: 18px;
+      filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(320deg);
+      transition: filter 0.25s ease;
+    }
+    .footer-social a:hover { background: var(--gold); }
+    .footer-social a:hover img { filter: brightness(0); }
+    .footer-col h4 {
+      color: var(--gold);
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .footer-col h4::after {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 2px;
+      background: var(--gold);
+      margin-top: 8px;
+      opacity: 0.5;
+    }
+    .footer-links-list { list-style: none; }
+    .footer-links-list li { margin-bottom: 10px; }
+    .footer-links-list a {
+      color: #999;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.25s ease, padding-left 0.25s ease;
+    }
+    .footer-links-list a:hover { color: var(--gold-light); padding-left: 6px; }
+    .footer-contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .footer-contact-item i {
+      color: var(--gold);
+      font-size: 0.95rem;
+      margin-top: 3px;
+      width: 16px;
+    }
+    .footer-contact-item span,
+    .footer-contact-item a {
+      color: #999;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+    .footer-contact-item a:hover { color: var(--gold-light); }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 40px;
+      border-top: 1px solid rgba(212,175,55,0.15);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .footer-bottom p { color: #555; font-size: 0.82rem; }
+    .footer-bottom-links { display: flex; gap: 24px; }
+    .footer-bottom-links a { color: #555; font-size: 0.82rem; text-decoration: none; transition: color 0.25s ease; }
+    .footer-bottom-links a:hover { color: var(--gold); }
+
+    @media (max-width: 1000px) {
+      .footer-body { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .footer-brand { grid-column: 1 / -1; }
+      .footer-brand p { max-width: 100%; }
+    }
+    @media (max-width: 798px) {
+      .nav-mobile { display: block; }
+
+      /* Nav bar stays 70px; the menu panel drops below it absolutely */
+      .navigation { height: 70px; overflow: visible; }
+
+      nav { float: none; }
+
+      /* The top-level menu: hidden by default, animates open with max-height */
+      nav ul.nav-list {
+        max-height: 0;
+        overflow: hidden;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background: var(--pure-black);
+        border-top: 1px solid rgba(212,175,55,0.3);
+        z-index: 999;
+        transition: max-height 0.35s ease;
+      }
+      nav ul.nav-list.nav-open { max-height: 600px; }
+
+      nav ul.nav-list > li { float: none; border-bottom: 1px solid #333; width: 100%; }
+      nav ul.nav-list > li > a { padding: 15px 20px; line-height: 20px; }
+
+      /* Sub-dropdowns: revealed with max-height */
+      .nav-dropdown {
+        position: static;
+        width: 100%;
+        background: #111;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        pointer-events: none;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease;
+      }
+      .nav-dropdown.open {
+        max-height: 300px;
+        pointer-events: auto;
+      }
+    }
+    @media (max-width: 600px) {
+      .footer-body { grid-template-columns: 1fr; padding: 40px 24px 36px; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<section class="navigation">
+  <div class="nav-container">
+    <div class="brand"><a href="index.html">EBM</a></div>
+    <nav>
+      <div class="nav-mobile"><a id="nav-toggle" href="#!"><span></span></a></div>
+      <ul class="nav-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#!">Club Stories</a>
+          <ul class="nav-dropdown">
+            <li><a href="Our%20History.html">Our History</a></li>
+            <li><a href="Founding%20Members.html">About the Founders</a></li>
+            <li><a href="Our%20History.html">About Us</a></li>
+          </ul>
+        </li>
+        <li><a href="#!">Our People</a>
+          <ul class="nav-dropdown">
+            <li><a href="Members.html">Meet the Curators</a></li>
+            <li><a href="Partners.html">Friends & Partners</a></li>
+          </ul>
+        </li>
+        <li><a href="Restaurant.html">Restaurant</a></li>
+        <li><a href="#!">Facilities</a>
+          <ul class="nav-dropdown">
+            <li><a href="Gym.html">Gym and Fitness</a></li>
+            <li><a href="Pool.html">Pool Arrangements</a></li>
+            <li><a href="Game%20Room.html">Sports and Games</a></li>
+          </ul>
+        </li>
+        <li><a href="Contact%20Us.html">Contact Us</a></li>
+        <li><a href="Members.html">Membership <i class="fas fa-arrow-right"></i></a></li>
+      </ul>
+    </nav>
+  </div>
+</section>
+
+<!-- GALLERY HERO -->
+<section class="gallery-hero">
+  <div class="hero-gold-frame">
+    <h1>The Prestige Archive</h1>
+    <div class="hero-line"></div>
+    <p>An exclusive visual journey through The Monarch Club's most celebrated moments — galas, culinary masterpieces, and the art of refined living.</p>
+  </div>
+</section>
+
+<!-- MASONRY GALLERY -->
+<section class="gallery-master">
+  <div class="gallery-container-fancy">
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-btn active" data-filter="all">All Moments</button>
+      <button class="filter-btn" data-filter="galas">Galas & Balls</button>
+      <button class="filter-btn" data-filter="dining">Culinary Arts</button>
+      <button class="filter-btn" data-filter="events">Signature Events</button>
+      <button class="filter-btn" data-filter="ambience">Club Ambience</button>
+    </div>
+    <div class="masonry-grid" id="masonryGrid"></div>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lightbox">
+  <span class="lightbox-close">&times;</span>
+  <span class="lightbox-prev">&#10094;</span>
+  <span class="lightbox-next">&#10095;</span>
+  <img class="lightbox-img" src="" alt="Gallery Image">
+  <div class="lightbox-caption"></div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-body">
+    <div class="footer-col footer-brand">
+      <img class="footer-logo" src="Logo%20Post.png" alt="The Monarch Club Logo">
+      <p>A premier social club dedicated to excellence, connection, and unforgettable experiences — serving members for over 25 years.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Facebook"><img src="Facebook.png" alt="Facebook"></a>
+        <a href="#" aria-label="Instagram"><img src="Instagram.png" alt="Instagram"></a>
+        <a href="#" aria-label="Twitter"><img src="Twitter.png" alt="Twitter"></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul class="footer-links-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="Our%20History.html">Club Stories</a></li>
+        <li><a href="Members.html">Meet the Curators</a></li>
+        <li><a href="Our%20History.html">About Us</a></li>
+        <li><a href="Our%20History.html">Milestones</a></li>
+        <li><a href="Partners.html">Partnerships</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul class="footer-links-list">
+        <li><a href="Policies.html">Privacy Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+        <li><a href="#">Club Rules</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>1 Monarch Lane<br>Beverly Hills, California</span></div>
+      <div class="footer-contact-item"><i class="fas fa-phone"></i><a href="tel:+15555555555">+1 555 555 5555</a></div>
+      <div class="footer-contact-item"><i class="fas fa-envelope"></i><a href="mailto:concierge@monarchclub.com">concierge@monarchclub.com</a></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2015 The Monarch Club. All rights reserved.</p>
+    <div class="footer-bottom-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="Contact%20Us.html">Membership</a></div>
+  </div>
+</footer>
+
+<script>
+  // GALLERY DATA
+  const galleryData = [
+    { src: "https://images.unsplash.com/photo-1566417713940-abfe2348ee2f?w=800", title: "Masquerade Gala", desc: "An evening of mystery and elegance", category: "galas" },
+    { src: "https://images.unsplash.com/photo-1519167758481-83d550d49b93?w=800", title: "Jazz on the Terrace", desc: "Summer nights with live orchestra", category: "events" },
+    { src: "https://images.unsplash.com/photo-1528605105345-5344ea20e269?w=800", title: "Poolside Cinema", desc: "Classic films under the stars", category: "ambience" },
+    { src: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800", title: "Harvest Feast", desc: "Farm-to-table seasonal dinner", category: "dining" },
+    { src: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800", title: "Wellness Retreat", desc: "Mindfulness and movement", category: "events" },
+    { src: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800", title: "Curator's Art Salon", desc: "Private gallery tour", category: "galas" },
+    { src: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800", title: "New Year's Spectacular", desc: "Midnight champagne toast", category: "galas" },
+    { src: "https://images.unsplash.com/photo-1464366400600-7168b4af6b10?w=800", title: "Chef's Table Experience", desc: "Intimate culinary journey", category: "dining" },
+    { src: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800", title: "Charity Polo Match", desc: "Sporting elegance", category: "events" },
+    { src: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=800", title: "Spring Soirée", desc: "Garden party celebration", category: "galas" },
+    { src: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=800", title: "Wine Connoisseur Dinner", desc: "Sommelier-led tasting", category: "dining" },
+    { src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800", title: "Gastronomy Gala", desc: "Michelin-starred collaboration", category: "dining" },
+    { src: "https://images.unsplash.com/photo-1561501900-3701fa6a0864?w=800", title: "Infinity Pool Lounge", desc: "Relaxation and refinement", category: "ambience" }
+  ];
+
+  let currentFilter = "all";
+  let filteredItems = [...galleryData];
+  let currentLightboxIndex = 0;
+
+  function buildGallery() {
+    const grid = document.getElementById("masonryGrid");
+    if (!grid) return;
+    grid.innerHTML = '';
+    filteredItems.forEach((item) => {
+      const col = document.createElement("div");
+      col.className = "grid-item";
+      let badgeText = "";
+      if (item.category === "galas") badgeText = "✦ GALA";
+      else if (item.category === "dining") badgeText = "🍽 CULINARY";
+      else if (item.category === "events") badgeText = "✨ EVENT";
+      else badgeText = "🏛 AMBIENCE";
+      col.innerHTML = `
+        <div class="item-category-badge">${badgeText}</div>
+        <img class="grid-item-img" src="${item.src}" alt="${item.title}" loading="lazy">
+        <div class="grid-overlay">
+          <h3>${item.title}</h3>
+          <p><i class="fas fa-crown"></i> ${item.desc}</p>
+        </div>
+      `;
+      const originalIndex = galleryData.findIndex(g => g.title === item.title && g.src === item.src);
+      col.addEventListener("click", () => openLightbox(originalIndex !== -1 ? originalIndex : 0));
+      grid.appendChild(col);
+    });
+  }
+
+  function filterGallery(category) {
+    currentFilter = category;
+    if (category === "all") filteredItems = [...galleryData];
+    else filteredItems = galleryData.filter(item => item.category === category);
+    buildGallery();
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.getAttribute("data-filter") === category);
+    });
+  }
+
+  function openLightbox(index) {
+    currentLightboxIndex = index;
+    updateLightboxContent();
+    document.getElementById("lightbox").classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+
+  function updateLightboxContent() {
+    const item = galleryData[currentLightboxIndex];
+    document.querySelector(".lightbox-img").src = item.src;
+    document.querySelector(".lightbox-caption").innerHTML = `<strong>${item.title}</strong> — ${item.desc}`;
+  }
+
+  function closeLightbox() {
+    document.getElementById("lightbox").classList.remove("active");
+    document.body.style.overflow = "";
+  }
+
+  function nextImage() {
+    currentLightboxIndex = (currentLightboxIndex + 1) % galleryData.length;
+    updateLightboxContent();
+  }
+
+  function prevImage() {
+    currentLightboxIndex = (currentLightboxIndex - 1 + galleryData.length) % galleryData.length;
+    updateLightboxContent();
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+
+    const isMobile = () => window.innerWidth <= 798;
+    const toggleBtn = document.getElementById("nav-toggle");
+    const navList   = document.querySelector("ul.nav-list");
+
+    // --- Hamburger: toggle the nav-list, NOT by swapping display style ---
+    toggleBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleBtn.classList.toggle("active");
+      navList.classList.toggle("nav-open");
+    });
+
+    // --- Dropdown parent links ---
+    document.querySelectorAll('nav ul li > a:not(:only-child)').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const parent   = this.parentElement;
+        const dropdown = this.nextElementSibling;
+        const isOpen   = dropdown.classList.contains('open');
+
+        // Close all other open dropdowns
+        document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+        document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('dropdown-open'));
+
+        // Open this one if it wasn't already open
+        if (!isOpen) {
+          dropdown.classList.add('open');
+          parent.classList.add('dropdown-open');
+        }
+      });
+    });
+
+    // --- Close everything when clicking outside nav ---
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.navigation')) {
+        document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+        document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('dropdown-open'));
+        if (isMobile()) {
+          navList.classList.remove('nav-open');
+          toggleBtn.classList.remove('active');
+        }
+      }
+    });
+
+    // --- Gallery ---
+    buildGallery();
+
+    const lb = document.getElementById("lightbox");
+    document.querySelector(".lightbox-close").addEventListener("click", closeLightbox);
+    document.querySelector(".lightbox-next").addEventListener("click", nextImage);
+    document.querySelector(".lightbox-prev").addEventListener("click", prevImage);
+    lb.addEventListener("click", (e) => { if (e.target === lb) closeLightbox(); });
+
+    document.addEventListener("keydown", (e) => {
+      if (!lb.classList.contains("active")) return;
+      if (e.key === "Escape")     closeLightbox();
+      if (e.key === "ArrowRight") nextImage();
+      if (e.key === "ArrowLeft")  prevImage();
+    });
+
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => filterGallery(btn.getAttribute("data-filter")));
+    });
+  });
+</script>
+</body>
+</html>

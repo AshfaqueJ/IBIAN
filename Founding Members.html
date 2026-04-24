@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>EBM Club | The Founding Members</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+
+    /* ============================================================
+       VARIABLES & RESET
+    ============================================================ */
+
+    :root {
+      --pure-black:  #000000;
+      --deep-black:  #0a0a0a;
+      --rich-black:  #121212;
+      --gold:        #d4af37;
+      --gold-light:  #f5e18b;
+      --gold-dark:   #b58c1a;
+      --white-soft:  #f5f5f5;
+      --white-muted: #cccccc;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background: var(--deep-black);
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+
+
+    /* ============================================================
+       NAVIGATION (FIXED: underline below text on mobile)
+    ============================================================ */
+
+    .navigation {
+      height: 70px;
+      background: var(--pure-black);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      border-bottom: 1px solid var(--gold);
+      box-shadow: 0 2px 15px rgba(0,0,0,0.8);
+    }
+
+    .nav-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+      height: 100%;
+    }
+
+    .brand {
+      position: absolute;
+      padding-left: 8px;
+      left: 0;
+      top: 0;
+      line-height: 70px;
+      margin-left:-10vw;
+    }
+
+    .brand a {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 48px;
+      font-family: "Brush Script MT", cursive;
+      transition: 0.3s;
+    }
+
+    .brand a:hover {
+      color: #fff2af;
+      filter: drop-shadow(0 0 5px var(--gold));
+    }
+
+    nav { 
+      float: right; 
+      height: 100%;
+    }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      margin-right:-12vw;
+    }
+
+    nav ul li {
+      float: left;
+      position: relative;
+    }
+
+    nav ul li a {
+      display: block;
+      padding: 0 20px;
+      line-height: 69px;
+      background: var(--pure-black);
+      color: var(--white-soft);
+      text-decoration: none;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 18px;
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover { color: var(--gold); }
+
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: translateX(-50%);
+      transition: width 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    nav ul li a:hover::after { width: calc(100% - 40px); }
+
+    nav > ul > li > a:not(:only-child) { padding-right: 35px; }
+
+    nav > ul > li > a:not(:only-child)::before {
+      content: "▾";
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%) rotate(0deg);
+      color: var(--gold);
+      font-size: 14px;
+      transition: transform 0.35s ease;
+    }
+
+    nav > ul > li.dropdown-open > a:not(:only-child)::before {
+      transform: translateY(-50%) rotate(-180deg);
+    }
+
+    .nav-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 100;
+      min-width: 230px;
+      background: var(--pure-black);
+      border: 1px solid rgba(212,175,55,0.4);
+      border-top: 2px solid var(--gold);
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.7);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scaleY(0.92);
+      transform-origin: top center;
+      pointer-events: none;
+      transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16,1,0.3,1), visibility 0.28s ease;
+    }
+
+    .nav-dropdown.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scaleY(1);
+      pointer-events: auto;
+    }
+
+    .nav-dropdown li {
+      float: none;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .nav-dropdown li:last-child { border-bottom: none; }
+
+    .nav-dropdown li a {
+      padding: 13px 22px;
+      line-height: 1.4;
+      font-size: 15px;
+      background: transparent;
+      color: var(--white-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.22s ease, color 0.22s ease, padding-left 0.22s ease;
+    }
+
+    .nav-dropdown li a::after { display: none; }
+
+    .nav-dropdown li a::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0;
+      transform: scale(0);
+      flex-shrink: 0;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .nav-dropdown li a:hover {
+      background: rgba(212,175,55,0.08);
+      color: var(--gold-light);
+      padding-left: 28px;
+    }
+
+    .nav-dropdown li a:hover::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .nav-mobile {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 70px;
+      height: 70px;
+      background: var(--pure-black);
+      border-bottom: 1px solid var(--gold);
+      z-index: 1100;
+    }
+
+    #nav-toggle {
+      position: absolute;
+      left: 18px;
+      top: 22px;
+      cursor: pointer;
+      padding: 10px 35px 16px 0;
+      display: block;
+    }
+
+    #nav-toggle span,
+    #nav-toggle span::before,
+    #nav-toggle span::after {
+      height: 5px;
+      width: 35px;
+      background: var(--gold);
+      position: absolute;
+      display: block;
+      content: "";
+      transition: 0.3s;
+    }
+
+    #nav-toggle span { top: 0; background: var(--gold); }
+    #nav-toggle span::before { top: -10px; }
+    #nav-toggle span::after  { bottom: -10px; }
+
+    #nav-toggle.active span           { background: transparent; }
+    #nav-toggle.active span::before   { transform: rotate(45deg);  top: 0; background: var(--gold); }
+    #nav-toggle.active span::after    { transform: rotate(-45deg); top: 0; background: var(--gold); }
+
+    /* Mobile Styles - underline properly BELOW text */
+    @media (max-width: 798px) {
+      .nav-mobile { 
+        display: block; 
+      }
+      .navigation { 
+        height: 70px; 
+        overflow: visible; 
+      }
+      nav { 
+        float: none; 
+        width: 100%;
+      }
+      nav ul.nav-list {
+        max-height: 0;
+        overflow: hidden;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background: var(--pure-black);
+        border-top: 1px solid rgba(212,175,55,0.3);
+        z-index: 999;
+        transition: max-height 0.35s ease;
+        box-shadow: 0 20px 30px rgba(0,0,0,0.9);
+      }
+      nav ul.nav-list.nav-open { 
+        max-height: 500px; 
+        overflow-y: auto;
+      }
+      nav ul.nav-list > li { 
+        float: none; 
+        border-bottom: 1px solid #333; 
+        width: 100%; 
+      }
+      nav ul.nav-list > li > a { 
+        padding: 14px 20px !important; 
+        line-height: 1.4 !important;
+      }
+      
+      nav ul li a::after {
+        bottom: 6px !important;
+        left: 20px !important;
+        transform: none !important;
+        height: 2px !important;
+      }
+      
+      nav ul li a:hover::after {
+        width: calc(100% - 40px) !important;
+      }
+      
+      .nav-dropdown {
+        position: static;
+        width: 100%;
+        background: #111;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        pointer-events: none;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease;
+        padding-left: 20px;
+      }
+      .nav-dropdown.open {
+        max-height: 300px;
+        pointer-events: auto;
+      }
+      .brand {
+        margin-left: 0;
+        left: 20px;
+      }
+    }
+
+
+    /* ============================================================
+       FOUNDING MEMBERS PAGE STYLES
+    ============================================================ */
+
+    .members-hero {
+      margin-top: 70px;
+      height: 55vh;
+      min-height: 420px;
+      background: radial-gradient(circle at 30% 20%, #0a0a0a 0%, #000000 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-bottom: 1px solid rgba(212,175,55,0.3);
+      overflow: hidden;
+    }
+
+    .members-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(45deg, rgba(212,175,55,0.02) 0px, rgba(212,175,55,0.02) 2px, transparent 2px, transparent 8px);
+      pointer-events: none;
+    }
+
+    .hero-gold-frame {
+      max-width: 1100px;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+      animation: fadeSlideUp 0.9s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+
+    .hero-gold-frame h1 {
+      font-size: 5rem;
+      font-family: Georgia, serif;
+      background: linear-gradient(135deg, var(--gold), #f3e3a2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-gold-frame .hero-line {
+      width: 120px;
+      height: 3px;
+      background: var(--gold);
+      margin: 24px auto 20px;
+    }
+
+    .hero-gold-frame p {
+      font-size: 1.3rem;
+      color: #cccccc;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    @keyframes fadeSlideUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Main content */
+    .members-main {
+      background: var(--deep-black);
+      padding: 70px 24px 120px;
+    }
+
+    .members-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .intro-section {
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto 90px auto;
+    }
+
+    .intro-section h2 {
+      font-size: 2.6rem;
+      font-family: Georgia, serif;
+      color: var(--gold-light);
+      margin-bottom: 20px;
+    }
+
+    .intro-section .gold-divider {
+      width: 80px;
+      height: 2px;
+      background: var(--gold);
+      margin: 18px auto 24px;
+    }
+
+    .intro-section p {
+      font-size: 1.12rem;
+      line-height: 1.7;
+      color: #bdbdbd;
+    }
+
+    /* Founding Members Grid - two epic profile cards */
+    .members-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 100px;
+      margin-bottom: 80px;
+    }
+
+    .member-card {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      background: var(--rich-black);
+      border-radius: 48px;
+      overflow: hidden;
+      border: 1px solid rgba(212,175,55,0.2);
+      transition: all 0.5s ease;
+      box-shadow: 0 25px 40px -20px rgba(0,0,0,0.6);
+    }
+
+    .member-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--gold);
+      box-shadow: 0 35px 55px -20px rgba(0,0,0,0.9);
+    }
+
+    .member-image {
+      flex: 1.2;
+      min-height: 520px;
+      background-size: cover;
+      background-position: center 30%;
+      position: relative;
+    }
+
+    .member-content {
+      flex: 1.8;
+      padding: 58px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .member-title {
+      display: inline-block;
+      background: rgba(212,175,55,0.15);
+      color: var(--gold);
+      font-size: 0.85rem;
+      letter-spacing: 2.5px;
+      padding: 6px 18px;
+      border-radius: 40px;
+      margin-bottom: 28px;
+      width: fit-content;
+      font-weight: 600;
+    }
+
+    .member-card h2 {
+      font-size: 3rem;
+      font-family: Georgia, serif;
+      color: var(--gold-light);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .member-subtitle {
+      font-size: 1.2rem;
+      color: var(--gold);
+      margin-bottom: 28px;
+      font-style: italic;
+      border-left: 2px solid var(--gold);
+      padding-left: 18px;
+    }
+
+    .member-card p {
+      font-size: 1.08rem;
+      line-height: 1.75;
+      color: #cfcfcf;
+      margin-bottom: 24px;
+    }
+
+    .member-card .quote {
+      font-size: 1.15rem;
+      font-style: italic;
+      color: #e0e0e0;
+      background: rgba(212,175,55,0.05);
+      padding: 22px 28px;
+      border-radius: 28px;
+      margin: 20px 0 10px;
+      border-left: 3px solid var(--gold);
+    }
+
+    .member-card.reverse {
+      flex-direction: row-reverse;
+    }
+
+    /* Legacy section - original 87 members */
+    .legacy-roster {
+      background: linear-gradient(135deg, rgba(0,0,0,0.6), rgba(18,18,18,0.9));
+      border-radius: 48px;
+      padding: 60px 48px;
+      margin: 70px 0 60px;
+      border: 1px solid rgba(212,175,55,0.25);
+      text-align: center;
+    }
+
+    .legacy-roster h3 {
+      font-size: 2rem;
+      font-family: Georgia, serif;
+      color: var(--gold-light);
+      margin-bottom: 20px;
+    }
+
+    .legacy-roster .roster-stats {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+      margin: 40px 0 30px;
+    }
+
+    .stat-pill {
+      background: var(--rich-black);
+      padding: 18px 32px;
+      border-radius: 60px;
+      border: 1px solid rgba(212,175,55,0.4);
+    }
+
+    .stat-pill .number {
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: var(--gold);
+      font-family: Georgia, serif;
+    }
+
+    .legacy-roster p {
+      max-width: 700px;
+      margin: 0 auto;
+      color: #bbb;
+    }
+
+    .signature-quote {
+      background: rgba(0,0,0,0.5);
+      border-left: 5px solid var(--gold);
+      padding: 38px 48px;
+      margin: 50px 0 30px;
+      font-style: italic;
+      font-size: 1.2rem;
+      border-radius: 28px;
+    }
+
+    @media (max-width: 1100px) {
+      .member-content { padding: 42px 38px; }
+      .member-card h2 { font-size: 2.5rem; }
+      .member-image { min-height: 420px; }
+    }
+
+    @media (max-width: 850px) {
+      .member-card, .member-card.reverse { flex-direction: column; }
+      .member-image { min-height: 380px; }
+      .member-content { padding: 38px 32px; }
+      .hero-gold-frame h1 { font-size: 3rem; }
+      .legacy-roster { padding: 40px 24px; }
+    }
+
+    @media (max-width: 550px) {
+      .member-card h2 { font-size: 2rem; }
+      .members-main { padding: 50px 20px 90px; }
+    }
+
+    /* FOOTER */
+    .site-footer {
+      background: var(--pure-black);
+      border-top: 2px solid var(--gold);
+      font-family: Georgia, serif;
+    }
+    .footer-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 40px 50px;
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: 50px;
+    }
+    .footer-brand .footer-logo {
+      filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(320deg);
+      width: 150px;
+      margin-bottom: 18px;
+    }
+    .footer-brand p {
+      color: #888;
+      font-size: 0.88rem;
+      max-width: 240px;
+    }
+    .footer-social {
+      display: flex;
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .footer-social a {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(212,175,55,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.25s ease;
+    }
+    .footer-social a img {
+      width: 18px;
+      filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(320deg);
+      transition: filter 0.25s ease;
+    }
+    .footer-social a:hover { background: var(--gold); }
+    .footer-social a:hover img { filter: brightness(0); }
+    .footer-col h4 {
+      color: var(--gold);
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .footer-col h4::after {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 2px;
+      background: var(--gold);
+      margin-top: 8px;
+      opacity: 0.5;
+    }
+    .footer-links-list { list-style: none; }
+    .footer-links-list li { margin-bottom: 10px; }
+    .footer-links-list a {
+      color: #999;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.25s ease, padding-left 0.25s ease;
+    }
+    .footer-links-list a:hover { color: var(--gold-light); padding-left: 6px; }
+    .footer-contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .footer-contact-item i {
+      color: var(--gold);
+      font-size: 0.95rem;
+      margin-top: 3px;
+      width: 16px;
+    }
+    .footer-contact-item span,
+    .footer-contact-item a {
+      color: #999;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+    .footer-contact-item a:hover { color: var(--gold-light); }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 40px;
+      border-top: 1px solid rgba(212,175,55,0.15);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .footer-bottom p { color: #555; font-size: 0.82rem; }
+    .footer-bottom-links { display: flex; gap: 24px; }
+    .footer-bottom-links a { color: #555; font-size: 0.82rem; text-decoration: none; transition: color 0.25s ease; }
+    .footer-bottom-links a:hover { color: var(--gold); }
+
+    @media (max-width: 1000px) {
+      .footer-body { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .footer-brand { grid-column: 1 / -1; }
+      .footer-brand p { max-width: 100%; }
+    }
+    @media (max-width: 600px) {
+      .footer-body { grid-template-columns: 1fr; padding: 40px 24px 36px; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .roster-stats { gap: 20px; }
+      .stat-pill { padding: 12px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<section class="navigation">
+  <div class="nav-container">
+    <div class="brand"><a href="index.html">EBM</a></div>
+    <nav>
+      <div class="nav-mobile"><a id="nav-toggle" href="#!"><span></span></a></div>
+      <ul class="nav-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#!">Club Stories</a>
+          <ul class="nav-dropdown">
+            <li><a href="Our%20History.html">Our History</a></li>
+            <li><a href="Founding%20Members.html">About the Founders</a></li>
+            <li><a href="Our%20History.html">About Us</a></li>
+          </ul>
+        </li>
+        <li><a href="#!">Our People</a>
+          <ul class="nav-dropdown">
+            <li><a href="Members.html">Meet the Curators</a></li>
+            <li><a href="Partners.html">Friends & Partners</a></li>
+          </ul>
+        </li>
+        <li><a href="Restaurant.html">Restaurant</a></li>
+        <li><a href="#!">Facilities</a>
+          <ul class="nav-dropdown">
+            <li><a href="Gym.html">Gym and Fitness</a></li>
+            <li><a href="Pool.html">Pool Arrangements</a></li>
+            <li><a href="Game%20Room.html">Sports and Games</a></li>
+          </ul>
+        </li>
+        <li><a href="Contact%20Us.html">Contact Us</a></li>
+        <li><a href="Membership%20Form.html">Membership <i class="fas fa-arrow-right"></i></a></li>
+      </ul>
+    </nav>
+  </div>
+</section>
+
+<!-- FOUNDING MEMBERS HERO -->
+<section class="members-hero">
+  <div class="hero-gold-frame">
+    <h1>The Visionaries</h1>
+    <div class="hero-line"></div>
+    <p>The extraordinary individuals who dared to imagine — and built the cornerstone of EBM Club’s enduring legacy.</p>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<section class="members-main">
+  <div class="members-container">
+    
+    <div class="intro-section">
+      <h2>Architects of Excellence</h2>
+      <div class="gold-divider"></div>
+      <p>In the autumn of 1978, three remarkable trailblazers united with a singular vision: to create a sanctuary where brilliance, culture, and camaraderie would flourish. Their diverse genius forged the soul of EBM Club, and their spirit resonates in every hall to this day.</p>
+    </div>
+
+    <div class="members-grid">
+      <!-- Founding Member 1: Eleanor Blake -->
+      <div class="member-card">
+        <div class="member-image" style="background-image: url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800'); background-size: cover; background-position: center 20%;"></div>
+        <div class="member-content">
+          <div class="member-title">✦ CO-FOUNDER & PATRON OF THE ARTS ✦</div>
+          <h2>Eleanor Blake</h2>
+          <div class="member-subtitle">“Where culture meets intention.”</div>
+          <p>A philanthropist and former gallery owner with an unerring eye for beauty, Eleanor Blake brought artistic soul to the EBM foundation. Her belief that a private club must nourish the creative spirit led to the inauguration of the annual EBM Art Salon and the acquisition of the club's legendary collection of postwar masterpieces. Eleanor personally curated the inaugural exhibition in 1979, featuring emerging talents who would become icons. Her legendary soirees in the East Wing drew luminaries from Hollywood to the Louvre, forging EBM's reputation as a nexus for creative minds. Eleanor's guiding principle — "Excellence is an art, not an accident" — remains etched above the club's main hearth.</p>
+          <div class="quote">“I envisioned a place where a painter and a financier could share a whiskey and discover common genius. That spark — that unexpected collision of worlds — is the heartbeat of EBM.”</div>
+        </div>
+      </div>
+
+      <!-- Founding Member 2: Benjamin Montclair -->
+      <div class="member-card reverse">
+        <div class="member-image" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800'); background-size: cover; background-position: center 25%;"></div>
+        <div class="member-content">
+          <div class="member-title">✦ CO-FOUNDER & STRATEGIC ARCHITECT ✦</div>
+          <h2>Benjamin Montclair</h2>
+          <div class="member-subtitle">“Legacy is built on quiet resolve.”</div>
+          <p>A former diplomat and international financier, Benjamin Montclair was the strategic mastermind behind EBM's global expansion and membership ethos. He drafted the club's original constitution, emphasizing discretion, mutual respect, and global citizenship. Benjamin's network brought the first wave of international founding members — ambassadors, Nobel laureates, and industrialists — transforming a local idea into a worldwide institution. His stewardship of the club's investment portfolio ensured financial independence for decades. Montclair's weekly "Global Affairs Breakfasts" became a signature tradition, where world events were debated with civility and foresight. His quiet diplomacy earned EBM the nickname "The Chamber of Goodwill."</p>
+          <div class="quote">“A club is not built on marble, but on the quality of its conversations. We sought to create a living room for the world’s finest minds — a place where trust is the currency and curiosity the compass.”</div>
+        </div>
+      </div>
+
+      <!-- Founding Member 3: Sir Marcus Reeves -->
+      <div class="member-card">
+        <div class="member-image" style="background-image: url('https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800'); background-size: cover; background-position: center 30%;"></div>
+        <div class="member-content">
+          <div class="member-title">✦ CO-FOUNDER & CUSTODIAN OF TRADITION ✦</div>
+          <h2>Sir Marcus Reeves</h2>
+          <div class="member-subtitle">“Elegance endures.”</div>
+          <p>A revered historian and former royal curator, Sir Marcus Reeves infused EBM with timeless rituals and architectural splendor. He oversaw the restoration of the original neo-Georgian mansion, personally selecting every cornice, chandelier, and leather binding. Marcus authored the club's ceremonial traditions — from the Founder's Toast to the Winter Gala's candlelight procession — ensuring that each event carried weight and meaning. His library, containing over 5,000 rare volumes, remains a sanctuary for members seeking quiet reflection. Sir Marcus believed that a club must honor the past while embracing the future, and his influence can be seen in every hand-carved detail of the Great Hall.</p>
+          <div class="quote">“We are but temporary guardians of a grand tradition. The walls remember every toast, every debate, every silence shared among friends. My duty was to ensure those walls spoke of grace and permanence.”</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- The Original 87 Charter Members -->
+    <div class="legacy-roster">
+      <h3>The Charter Circle</h3>
+      <div class="roster-stats">
+        <div class="stat-pill"><span class="number">87</span><br>Original Members</div>
+        <div class="stat-pill"><span class="number">12</span><br>Nations Represented</div>
+        <div class="stat-pill"><span class="number">1978</span><br>Year of Foundation</div>
+      </div>
+      <p>Beyond the three founders, eighty-four distinguished patrons answered the inaugural call — pioneers in medicine, literature, enterprise, and the arts. Together, they formed a brotherhood and sisterhood of excellence that set the standard for generations. Their names are inscribed on the bronze Honor Roll in the Founder’s Corridor, a lasting tribute to the courageous few who believed in a radical vision of hospitality and human connection.</p>
+    </div>
+
+    <!-- Collective Legacy Quote -->
+    <div class="signature-quote">
+      <i class="fas fa-crown" style="color: var(--gold); margin-right: 14px; font-size: 1.8rem; vertical-align: middle;"></i> 
+      What Eleanor, Benjamin, and Marcus built was never just a club — it was a living philosophy. They dreamed of a place where ambition found grace, where conversations changed lives, and where every member felt they belonged to something eternal. Their legacy is our daily compass.
+      <div style="margin-top: 20px; font-weight: normal; font-style: normal; letter-spacing: 1px;">— From the EBM Charter, 1978</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-body">
+    <div class="footer-col footer-brand">
+      <img class="footer-logo" src="Logo%20Post.png" alt="The Monarch Club Logo">
+      <p>A premier social club dedicated to excellence, connection, and unforgettable experiences — serving members for over 25 years.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Facebook"><img src="Facebook.png" alt="Facebook"></a>
+        <a href="#" aria-label="Instagram"><img src="Instagram.png" alt="Instagram"></a>
+        <a href="#" aria-label="Twitter"><img src="Twitter.png" alt="Twitter"></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul class="footer-links-list">
+        <li><a href="Index.html">Home</a></li>
+        <li><a href="News.html">Club Stories</a></li>
+        <li><a href="Meet%20the%20Team.html">Meet the Curators</a></li>
+        <li><a href="Blog.html">About Us</a></li>
+        <li><a href="Achievements.html">Milestones</a></li>
+        <li><a href="Collaborators.html">Partnerships</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul class="footer-links-list">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+        <li><a href="#">Club Rules</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>1 Monarch Lane<br>Beverly Hills, California</span></div>
+      <div class="footer-contact-item"><i class="fas fa-phone"></i><a href="tel:+15555555555">+1 555 555 5555</a></div>
+      <div class="footer-contact-item"><i class="fas fa-envelope"></i><a href="mailto:concierge@monarchclub.com">concierge@monarchclub.com</a></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2015 The Monarch Club. All rights reserved.</p>
+    <div class="footer-bottom-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="Contact%20Us.html">Membership</a></div>
+  </div>
+</footer>
+
+<script>
+  // NAVIGATION & MOBILE MENU - fully functional
+  document.addEventListener("DOMContentLoaded", () => {
+    const isMobile = () => window.innerWidth <= 798;
+    const toggleBtn = document.getElementById("nav-toggle");
+    const navList   = document.querySelector("ul.nav-list");
+
+    if (toggleBtn && navList) {
+      toggleBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleBtn.classList.toggle("active");
+        navList.classList.toggle("nav-open");
+      });
+    }
+
+    document.querySelectorAll('nav ul li > a:not(:only-child)').forEach(link => {
+      link.addEventListener('click', function(e) {
+        if (window.innerWidth <= 798) e.preventDefault();
+        e.stopPropagation();
+        const parent   = this.parentElement;
+        const dropdown = this.nextElementSibling;
+        const isOpen   = dropdown && dropdown.classList.contains('open');
+        document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+        document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('dropdown-open'));
+        if (dropdown && !isOpen) {
+          dropdown.classList.add('open');
+          parent.classList.add('dropdown-open');
+        }
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.navigation')) {
+        document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+        document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('dropdown-open'));
+        if (isMobile() && navList && toggleBtn) {
+          navList.classList.remove('nav-open');
+          toggleBtn.classList.remove('active');
+        }
+      }
+    });
+  });
+</script>
+</body>
+</html>

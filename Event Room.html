@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>EBM Club | Signature Events & Legacy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+
+    /* ============================================================
+       VARIABLES & RESET
+    ============================================================ */
+
+    :root {
+      --pure-black:  #000000;
+      --deep-black:  #0a0a0a;
+      --rich-black:  #121212;
+      --gold:        #d4af37;
+      --gold-light:  #f5e18b;
+      --gold-dark:   #b58c1a;
+      --white-soft:  #f5f5f5;
+      --white-muted: #cccccc;
+      --burgundy:    #800020;
+      --burgundy-glow:#a83246;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background: var(--deep-black);
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+
+
+    /* ============================================================
+       NAVIGATION (fully fixed mobile underline below text)
+    ============================================================ */
+
+    .navigation {
+      height: 70px;
+      background: var(--pure-black);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      border-bottom: 1px solid var(--gold);
+      box-shadow: 0 2px 15px rgba(0,0,0,0.8);
+    }
+
+    .nav-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+      height: 100%;
+    }
+
+    .brand {
+      position: absolute;
+      padding-left: 8px;
+      left: 0;
+      top: 0;
+      line-height: 70px;
+      margin-left:-10vw;
+    }
+
+    .brand a {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 48px;
+      font-family: "Brush Script MT", cursive;
+      transition: 0.3s;
+    }
+
+    .brand a:hover {
+      color: #fff2af;
+      filter: drop-shadow(0 0 5px var(--gold));
+    }
+
+    nav { 
+      float: right; 
+      height: 100%;
+    }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      margin-right:-12vw;
+    }
+
+    nav ul li {
+      float: left;
+      position: relative;
+    }
+
+    nav ul li a {
+      display: block;
+      padding: 0 20px;
+      line-height: 69px;
+      background: var(--pure-black);
+      color: var(--white-soft);
+      text-decoration: none;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 18px;
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover { color: var(--gold); }
+
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: translateX(-50%);
+      transition: width 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    nav ul li a:hover::after { width: calc(100% - 40px); }
+
+    nav > ul > li > a:not(:only-child) { padding-right: 35px; }
+
+    nav > ul > li > a:not(:only-child)::before {
+      content: "▾";
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%) rotate(0deg);
+      color: var(--gold);
+      font-size: 14px;
+      transition: transform 0.35s ease;
+    }
+
+    nav > ul > li.dropdown-open > a:not(:only-child)::before {
+      transform: translateY(-50%) rotate(-180deg);
+    }
+
+    .nav-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 100;
+      min-width: 230px;
+      background: var(--pure-black);
+      border: 1px solid rgba(212,175,55,0.4);
+      border-top: 2px solid var(--gold);
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.7);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scaleY(0.92);
+      transform-origin: top center;
+      pointer-events: none;
+      transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16,1,0.3,1), visibility 0.28s ease;
+    }
+
+    .nav-dropdown.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scaleY(1);
+      pointer-events: auto;
+    }
+
+    .nav-dropdown li {
+      float: none;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .nav-dropdown li:last-child { border-bottom: none; }
+
+    .nav-dropdown li a {
+      padding: 13px 22px;
+      line-height: 1.4;
+      font-size: 15px;
+      background: transparent;
+      color: var(--white-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.22s ease, color 0.22s ease, padding-left 0.22s ease;
+    }
+
+    .nav-dropdown li a::after { display: none; }
+
+    .nav-dropdown li a::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0;
+      transform: scale(0);
+      flex-shrink: 0;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .nav-dropdown li a:hover {
+      background: rgba(212,175,55,0.08);
+      color: var(--gold-light);
+      padding-left: 28px;
+    }
+
+    .nav-dropdown li a:hover::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .nav-mobile {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 70px;
+      height: 70px;
+      background: var(--pure-black);
+      border-bottom: 1px solid var(--gold);
+      z-index: 1100;
+    }
+
+    #nav-toggle {
+      position: absolute;
+      left: 18px;
+      top: 22px;
+      cursor: pointer;
+      padding: 10px 35px 16px 0;
+      display: block;
+    }
+
+    #nav-toggle span,
+    #nav-toggle span::before,
+    #nav-toggle span::after {
+      height: 5px;
+      width: 35px;
+      background: var(--gold);
+      position: absolute;
+      display: block;
+      content: "";
+      transition: 0.3s;
+    }
+
+    #nav-toggle span { top: 0; background: var(--gold); }
+    #nav-toggle span::before { top: -10px; }
+    #nav-toggle span::after  { bottom: -10px; }
+
+    #nav-toggle.active span           { background: transparent; }
+    #nav-toggle.active span::before   { transform: rotate(45deg);  top: 0; background: var(--gold); }
+    #nav-toggle.active span::after    { transform: rotate(-45deg); top: 0; background: var(--gold); }
+
+    @media (max-width: 798px) {
+      .nav-mobile { display: block; }
+      .navigation { height: 70px; overflow: visible; }
+      nav { float: none; width: 100%; }
+      nav ul.nav-list {
+        max-height: 0;
+        overflow: hidden;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background: var(--pure-black);
+        border-top: 1px solid rgba(212,175,55,0.3);
+        z-index: 999;
+        transition: max-height 0.35s ease;
+        box-shadow: 0 20px 30px rgba(0,0,0,0.9);
+      }
+      nav ul.nav-list.nav-open { max-height: 500px; overflow-y: auto; }
+      nav ul.nav-list > li { float: none; border-bottom: 1px solid #333; width: 100%; }
+      nav ul.nav-list > li > a { padding: 14px 20px !important; line-height: 1.4 !important; }
+      nav ul li a::after { bottom: 6px !important; left: 20px !important; transform: none !important; height: 2px !important; }
+      nav ul li a:hover::after { width: calc(100% - 40px) !important; }
+      .nav-dropdown {
+        position: static;
+        width: 100%;
+        background: #111;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        pointer-events: none;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease;
+        padding-left: 20px;
+      }
+      .nav-dropdown.open { max-height: 300px; pointer-events: auto; }
+      .brand { margin-left: 0; left: 20px; }
+    }
+
+
+    /* ============================================================
+       EVENTS PAGE STYLES
+    ============================================================ */
+
+    .events-hero {
+      margin-top: 70px;
+      height: 55vh;
+      min-height: 420px;
+      background: radial-gradient(circle at 30% 20%, #1a0a0a 0%, #000000 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-bottom: 1px solid rgba(128,0,32,0.5);
+      overflow: hidden;
+    }
+
+    .events-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(45deg, rgba(128,0,32,0.04) 0px, rgba(128,0,32,0.04) 2px, transparent 2px, transparent 8px);
+      pointer-events: none;
+    }
+
+    .hero-gold-frame {
+      max-width: 1100px;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+      animation: fadeSlideUp 0.9s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+
+    .hero-gold-frame h1 {
+      font-size: 5rem;
+      font-family: Georgia, serif;
+      background: linear-gradient(135deg, var(--burgundy-glow), #e0a0b0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-gold-frame .hero-line {
+      width: 120px;
+      height: 3px;
+      background: var(--burgundy);
+      margin: 24px auto 20px;
+    }
+
+    .hero-gold-frame p {
+      font-size: 1.3rem;
+      color: #cccccc;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    @keyframes fadeSlideUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Main content */
+    .events-main {
+      background: var(--deep-black);
+      padding: 70px 24px 120px;
+    }
+
+    .events-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Section 1 & 2 layout */
+    .event-section {
+      margin-bottom: 100px;
+    }
+
+    .feature-card {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      background: var(--rich-black);
+      border-radius: 48px;
+      overflow: hidden;
+      border: 1px solid rgba(128,0,32,0.35);
+      transition: all 0.5s ease;
+      box-shadow: 0 25px 40px -20px rgba(0,0,0,0.6);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--burgundy);
+      box-shadow: 0 30px 50px -20px rgba(128,0,32,0.3);
+    }
+
+    .feature-image {
+      flex: 1.2;
+      min-height: 480px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .feature-content {
+      flex: 1.8;
+      padding: 58px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .section-badge {
+      display: inline-block;
+      background: rgba(128,0,32,0.18);
+      color: var(--burgundy-glow);
+      font-size: 0.85rem;
+      letter-spacing: 2.5px;
+      padding: 6px 18px;
+      border-radius: 40px;
+      margin-bottom: 28px;
+      width: fit-content;
+      font-weight: 600;
+    }
+
+    .feature-content h2 {
+      font-size: 2.8rem;
+      font-family: Georgia, serif;
+      color: var(--gold-light);
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    .feature-content p {
+      font-size: 1.08rem;
+      line-height: 1.75;
+      color: #cfcfcf;
+      margin-bottom: 20px;
+    }
+
+    .feature-content .highlight {
+      font-size: 1.18rem;
+      font-weight: 400;
+      color: #f5e0e5;
+      border-left: 3px solid var(--burgundy);
+      padding-left: 26px;
+      margin: 20px 0 10px;
+    }
+
+    .event-date-chip {
+      display: inline-block;
+      background: rgba(212,175,55,0.12);
+      padding: 6px 16px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      color: var(--gold);
+      margin-top: 12px;
+      font-family: monospace;
+      letter-spacing: 0.5px;
+    }
+
+    .feature-card.reverse {
+      flex-direction: row-reverse;
+    }
+
+    /* Section 3: Feature list with detailed dates */
+    .features-list-section {
+      background: linear-gradient(135deg, #1a0c0c, var(--rich-black));
+      border-radius: 48px;
+      padding: 58px 56px;
+      border: 1px solid rgba(128,0,32,0.4);
+      margin-top: 40px;
+    }
+
+    .features-list-section h2 {
+      font-size: 2.4rem;
+      font-family: Georgia, serif;
+      color: var(--gold);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .section-subhead {
+      text-align: center;
+      color: #aaa;
+      margin-bottom: 48px;
+      font-size: 1.05rem;
+    }
+
+    .grid-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-top: 20px;
+    }
+
+    .feature-item {
+      background: rgba(0,0,0,0.5);
+      padding: 28px 24px;
+      border-radius: 32px;
+      border: 1px solid rgba(128,0,32,0.3);
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .feature-item:hover {
+      border-color: var(--burgundy-glow);
+      transform: translateY(-5px);
+      background: rgba(128,0,32,0.08);
+    }
+
+    .feature-icon {
+      font-size: 2.8rem;
+      color: var(--burgundy-glow);
+      margin-bottom: 20px;
+    }
+
+    .feature-item h3 {
+      font-size: 1.5rem;
+      color: var(--gold-light);
+      margin-bottom: 12px;
+      font-family: Georgia, serif;
+    }
+
+    .event-date {
+      font-size: 0.85rem;
+      color: var(--burgundy-glow);
+      font-weight: 600;
+      margin: 12px 0 8px;
+      letter-spacing: 0.5px;
+      background: rgba(128,0,32,0.2);
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 30px;
+    }
+
+    .feature-item p {
+      color: #bbb;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-top: 12px;
+    }
+
+    .testimonial-badge {
+      display: inline-block;
+      background: rgba(128,0,32,0.2);
+      border-radius: 60px;
+      padding: 10px 22px;
+      margin: 8px 6px;
+      font-size: 0.85rem;
+      color: var(--burgundy-glow);
+    }
+
+    .testimonials-wrap {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px dashed rgba(128,0,32,0.5);
+    }
+
+    /* CTA Button Section */
+    .cta-section {
+      text-align: center;
+      margin-top: 80px;
+      padding: 50px 30px;
+      background: linear-gradient(135deg, rgba(128,0,32,0.15), rgba(0,0,0,0.6));
+      border-radius: 60px;
+      border: 1px solid rgba(212,175,55,0.3);
+    }
+
+    .cta-section h3 {
+      font-size: 2rem;
+      font-family: Georgia, serif;
+      color: var(--gold-light);
+      margin-bottom: 16px;
+    }
+
+    .cta-section p {
+      max-width: 600px;
+      margin: 0 auto 32px auto;
+      color: #ccc;
+      font-size: 1.05rem;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--pure-black);
+      padding: 16px 48px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 60px;
+      transition: all 0.3s ease;
+      font-family: Georgia, serif;
+      letter-spacing: 1px;
+      border: 2px solid transparent;
+    }
+
+    .cta-button:hover {
+      background: transparent;
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: scale(1.02);
+      box-shadow: 0 0 25px rgba(212,175,55,0.4);
+    }
+
+    @media (max-width: 1100px) {
+      .feature-content { padding: 42px 38px; }
+      .feature-content h2 { font-size: 2.2rem; }
+      .feature-image { min-height: 400px; }
+      .features-list-section { padding: 42px 32px; }
+    }
+
+    @media (max-width: 850px) {
+      .feature-card, .feature-card.reverse { flex-direction: column; }
+      .feature-image { min-height: 340px; }
+      .feature-content { padding: 36px 28px; }
+      .hero-gold-frame h1 { font-size: 3rem; }
+      .grid-features { gap: 20px; }
+      .cta-section h3 { font-size: 1.6rem; }
+    }
+
+    @media (max-width: 550px) {
+      .feature-content h2 { font-size: 1.8rem; }
+      .events-main { padding: 50px 20px 90px; }
+      .features-list-section { padding: 32px 20px; }
+      .cta-button { padding: 12px 32px; font-size: 1rem; }
+    }
+
+    /* FOOTER */
+    .site-footer {
+      background: var(--pure-black);
+      border-top: 2px solid var(--gold);
+      font-family: Georgia, serif;
+    }
+    .footer-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 40px 50px;
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: 50px;
+    }
+    .footer-brand .footer-logo {
+      filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(320deg);
+      width: 150px;
+      margin-bottom: 18px;
+    }
+    .footer-brand p {
+      color: #888;
+      font-size: 0.88rem;
+      max-width: 240px;
+    }
+    .footer-social {
+      display: flex;
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .footer-social a {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(212,175,55,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.25s ease;
+    }
+    .footer-social a img {
+      width: 18px;
+      filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(320deg);
+      transition: filter 0.25s ease;
+    }
+    .footer-social a:hover { background: var(--gold); }
+    .footer-social a:hover img { filter: brightness(0); }
+    .footer-col h4 {
+      color: var(--gold);
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .footer-col h4::after {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 2px;
+      background: var(--gold);
+      margin-top: 8px;
+      opacity: 0.5;
+    }
+    .footer-links-list { list-style: none; }
+    .footer-links-list li { margin-bottom: 10px; }
+    .footer-links-list a {
+      color: #999;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.25s ease, padding-left 0.25s ease;
+    }
+    .footer-links-list a:hover { color: var(--gold-light); padding-left: 6px; }
+    .footer-contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .footer-contact-item i {
+      color: var(--gold);
+      font-size: 0.95rem;
+      margin-top: 3px;
+      width: 16px;
+    }
+    .footer-contact-item span,
+    .footer-contact-item a {
+      color: #999;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+    .footer-contact-item a:hover { color: var(--gold-light); }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 40px;
+      border-top: 1px solid rgba(212,175,55,0.15);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .footer-bottom p { color: #555; font-size: 0.82rem; }
+    .footer-bottom-links { display: flex; gap: 24px; }
+    .footer-bottom-links a { color: #555; font-size: 0.82rem; text-decoration: none; transition: color 0.25s ease; }
+    .footer-bottom-links a:hover { color: var(--gold); }
+
+    @media (max-width: 1000px) {
+      .footer-body { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .footer-brand { grid-column: 1 / -1; }
+      .footer-brand p { max-width: 100%; }
+    }
+    @media (max-width: 600px) {
+      .footer-body { grid-template-columns: 1fr; padding: 40px 24px 36px; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<section class="navigation">
+  <div class="nav-container">
+    <div class="brand"><a href="index.html">EBM</a></div>
+    <nav>
+      <div class="nav-mobile"><a id="nav-toggle" href="#!"><span></span></a></div>
+      <ul class="nav-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#!">Club Stories</a>
+          <ul class="nav-dropdown">
+            <li><a href="Our%20History.html">Our History</a></li>
+            <li><a href="Founding%20Members.html">About the Founders</a></li>
+            <li><a href="Our%20History.html">About Us</a></li>
+          </ul>
+        </li>
+        <li><a href="#!">Our People</a>
+          <ul class="nav-dropdown">
+            <li><a href="Members.html">Meet the Curators</a></li>
+            <li><a href="Partners.html">Friends & Partners</a></li>
+          </ul>
+        </li>
+        <li><a href="Restaurant.html">Restaurant</a></li>
+        <li><a href="#!">Facilities</a>
+          <ul class="nav-dropdown">
+            <li><a href="Gym.html">Gym and Fitness</a></li>
+            <li><a href="Pool.html">Pool Arrangements</a></li>
+            <li><a href="Game%20Room.html">Sports and Games</a></li>
+          </ul>
+        </li>
+        <li><a href="Contact%20Us.html">Contact Us</a></li>
+        <li><a href="Membership%20Form.html">Membership <i class="fas fa-arrow-right"></i></a></li>
+      </ul>
+    </nav>
+  </div>
+</section>
+
+<!-- HERO SECTION -->
+<section class="events-hero">
+  <div class="hero-gold-frame">
+    <h1>Moments That Define</h1>
+    <div class="hero-line"></div>
+    <p>Step into a world of legendary galas, intimate salons, and unforgettable celebrations — where every event becomes a cherished memory.</p>
+  </div>
+</section>
+
+<!-- EVENTS CONTENT -->
+<section class="events-main">
+  <div class="events-container">
+
+    <!-- SECTION 1: Masquerade Gala -->
+    <div class="event-section">
+      <div class="feature-card">
+        <div class="feature-image" style="background-image: url('mask.webp'); background-size: cover; background-position: center 40%;"></div>
+        <div class="feature-content">
+          <div class="section-badge">✦ THE CROWN JEWEL • ANNUAL MASQUERADE ✦</div>
+          <h2>The Enchanted Masquerade</h2>
+          <p>Each December, on the second Saturday before Christmas, EBM Club transforms into a Venetian dreamscape for our legendary Masquerade Gala. Members don handcrafted masks and black-tie attire, descending the grand staircase into the Cathedral Ballroom, where live string quartets give way to a twelve-piece orchestra. The 2024 edition (December 14th) featured a cascading chandelier of 5,000 crystals and a surprise performance by a Grammy-winning vocalist. Guests danced until 3 AM, sipping vintage champagne beneath a ceiling of floating candles. One attendee called it “the night time stood still — pure magic, from the first waltz to the last toast.”</p>
+          <p class="highlight">“As the clock struck midnight, the room erupted in confetti of gold leaf. It was not just a party — it was a declaration of joy.” — longtime member, Eleanor V.</p>
+          <p>The Masquerade has become the most coveted invitation in the city, with waiting lists opening in June. Members cherish the tradition of the “Reveal” — unmasking together just before the final waltz, symbolizing authenticity and connection. This is the essence of EBM: celebration with soul.</p>
+          <span class="event-date-chip"><i class="far fa-calendar-alt"></i> Next edition: December 13, 2025 | Invitations dispatched in October</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: Chef's Table & Culinary Series -->
+    <div class="event-section">
+      <div class="feature-card reverse">
+        <div class="feature-image" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200'); background-size: cover; background-position: center 50%;"></div>
+        <div class="feature-content">
+          <div class="section-badge">✦ EPICUREAN EXCELLENCE • CHEF'S TABLE SERIES ✦</div>
+          <h2>Gastronomic Journeys</h2>
+          <p>Our quarterly Chef's Table dinners have become the stuff of legend. Past editions have seen Michelin-starred icons from Paris, Tokyo, and Lima take over the Gilded Kitchen, crafting twelve-course tasting menus paired with rare vintages from the club's 3,000-bottle cellar. In spring 2025 (March 21st), Chef Amara Okonkwo created a “Silk Road” feast — saffron-infused broths, dry-aged wagyu, and a dessert course lit by edible gold leaf. Members describe these evenings as “transformative,” where strangers become friends over shared wonder. Each dinner is limited to twenty-four seats, ensuring intimacy and conversation that flows until late into the night.</p>
+          <div class="highlight">“I’ve attended dinners across the world, but nothing compares to the warmth and artistry of EBM’s Chef's Table. It’s why I became a member.” — James L., Founding Patron</div>
+          <p>Beyond formal dinners, EBM hosts monthly “Culinary Salons” — intimate cooking demonstrations, wine workshops, and meet-the-maker evenings with artisanal producers. These gatherings celebrate the club's belief that food is not mere sustenance, but a bridge between cultures and hearts.</p>
+          <span class="event-date-chip"><i class="far fa-calendar-alt"></i> Next dinner: June 19, 2025 (Summer Solstice Edition) | Booking opens May 1st</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Past event highlights with detailed dates/times -->
+    <div class="features-list-section">
+      <h2>✦ Legacy in Motion ✦</h2>
+      <div class="section-subhead">Iconic celebrations from our recent archive — relive the magic</div>
+      
+      <div class="grid-features">
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-wine-glass-alt"></i></div>
+          <h3>Champagne & Sonata</h3>
+          <div class="event-date"><i class="far fa-calendar-check"></i> October 25, 2024 | 7:30 PM</div>
+          <p>An evening with the Philharmonic's first chair, followed by a vertical tasting of Krug vintages (1988, 1996, 2008). Members toasted under the stars on the Terrace Royale until midnight. The night raised $47,000 for the EBM Music Scholarship Fund.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-palette"></i></div>
+          <h3>Curator’s Salon</h3>
+          <div class="event-date"><i class="far fa-calendar-check"></i> September 12, 2024 | 6:00 PM</div>
+          <p>Private viewing of the Rothschild collection, led by the museum's director. Followed by a discussion on art as legacy — a sellout event with 80 attendees. The evening concluded with a champagne reception in the Sculpture Garden until 10 PM.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-music"></i></div>
+          <h3>Jazz at Midnight</h3>
+          <div class="event-date"><i class="far fa-calendar-check"></i> November 8 & 9, 2024 | 10:00 PM – 2:00 AM</div>
+          <p>Speakeasy-style evenings featuring Grammy-nominated artist Samara Joy. Previous performers include Diana Krall (March 2024) and Jon Batiste (September 2023), with after-parties in the Cellar Lounge. Each session limited to 120 guests.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-globe-americas"></i></div>
+          <h3>Global Leaders Forum</h3>
+          <div class="event-date"><i class="far fa-calendar-check"></i> February 28, 2025 | 4:00 PM – 8:00 PM</div>
+          <p>Intimate dialogues with Nobel laureate Dr. Sarah Al-Mansour and former UN Ambassador Kenneth Cole in the Library Rotunda. Followed by a private dinner with 30 members. The 2024 edition featured a conversation on ethical AI with Sundar Pichai.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-seedling"></i></div>
+          <h3>Harvest Moon Gala</h3>
+          <div class="event-date"><i class="far fa-calendar-check"></i> September 29, 2024 | 6:30 PM – 11:00 PM</div>
+          <p>Annual farm-to-table feast held on the rooftop garden. Live folk music, artisanal cocktails from local distilleries, and a silent auction benefiting the EBM Foundation's environmental grants. Raised $62,000 for urban farming initiatives.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-champagne-glasses"></i></div>
+          <h3>New Year's Spectacular</h3>
+          <div class="event-date"><i class="far fa-calendar-check"></i> December 31, 2024 – January 1, 2025 | 9:00 PM – 3:00 AM</div>
+          <p>360-degree views of the city fireworks, a live countdown from the Grand Balcony, and breakfast (truffle scrambled eggs & caviar) served at 2 AM. The most anticipated ticket of the season, sold out in 48 hours. Champagne tower featured 600 glasses of Dom Pérignon 2015.</p>
+        </div>
+      </div>
+
+      <div class="testimonials-wrap">
+        <span class="testimonial-badge"><i class="fas fa-quote-left"></i> “I joined for the pool — I stayed for the galas. Unforgettable.”</span>
+        <span class="testimonial-badge"><i class="fas fa-quote-left"></i> “Every event feels like a family reunion, if your family had world-class champagne.”</span>
+        <span class="testimonial-badge"><i class="fas fa-quote-left"></i> “The Chef's Table alone is worth the membership.”</span>
+        <span class="testimonial-badge"><i class="fas fa-quote-left"></i> “December Masquerade 2024 changed my definition of celebration.”</span>
+      </div>
+    </div>
+
+    <!-- CTA BUTTON SECTION -->
+    <div class="cta-section">
+      <h3>Be Part of the Story</h3>
+      <p>Our calendar is filled with exclusive gatherings, from intimate wine salons to grand masked balls. Don't just hear the legends — live them. Upcoming: Summer Soirée (June 21), White Truffle Dinner (November 7), New Year's 2026 Gala.</p>
+      <a href="Event%20Notice.html" class="cta-button">✦ Explore Current Events ✦</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-body">
+    <div class="footer-col footer-brand">
+      <img class="footer-logo" src="Logo%20Post.png" alt="The Monarch Club Logo">
+      <p>A premier social club dedicated to excellence, connection, and unforgettable experiences — serving members for over 25 years.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Facebook"><img src="Facebook.png" alt="Facebook"></a>
+        <a href="#" aria-label="Instagram"><img src="Instagram.png" alt="Instagram"></a>
+        <a href="#" aria-label="Twitter"><img src="Twitter.png" alt="Twitter"></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul class="footer-links-list">
+        <li><a href="Index.html">Home</a></li>
+        <li><a href="News.html">Club Stories</a></li>
+        <li><a href="Meet%20the%20Team.html">Meet the Curators</a></li>
+        <li><a href="Blog.html">About Us</a></li>
+        <li><a href="Achievements.html">Milestones</a></li>
+        <li><a href="Collaborators.html">Partnerships</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul class="footer-links-list">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+        <li><a href="#">Club Rules</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>1 Monarch Lane<br>Beverly Hills, California</span></div>
+      <div class="footer-contact-item"><i class="fas fa-phone"></i><a href="tel:+15555555555">+1 555 555 5555</a></div>
+      <div class="footer-contact-item"><i class="fas fa-envelope"></i><a href="mailto:concierge@monarchclub.com">concierge@monarchclub.com</a></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2015 The Monarch Club. All rights reserved.</p>
+    <div class="footer-bottom-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="Contact%20Us.html">Membership</a></div>
+  </div>
+</footer>
+
+<script>
+  // MOBILE NAVIGATION
+  document.addEventListener("DOMContentLoaded", () => {
+    const isMobile = () => window.innerWidth <= 798;
+    const toggleBtn = document.getElementById("nav-toggle");
+    const navList   = document.querySelector("ul.nav-list");
+
+    if (toggleBtn && navList) {
+      toggleBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleBtn.classList.toggle("active");
+        navList.classList.toggle("nav-open");
+      });
+    }
+
+    document.querySelectorAll('nav ul li > a:not(:only-child)').forEach(link => {
+      link.addEventListener('click', function(e) {
+        if (window.innerWidth <= 798) e.preventDefault();
+        e.stopPropagation();
+        const parent   = this.parentElement;
+        const dropdown = this.nextElementSibling;
+        const isOpen   = dropdown && dropdown.classList.contains('open');
+        document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+        document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('dropdown-open'));
+        if (dropdown && !isOpen) {
+          dropdown.classList.add('open');
+          parent.classList.add('dropdown-open');
+        }
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.navigation')) {
+        document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+        document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('dropdown-open'));
+        if (isMobile() && navList && toggleBtn) {
+          navList.classList.remove('nav-open');
+          toggleBtn.classList.remove('active');
+        }
+      }
+    });
+  });
+</script>
+</body>
+</html>
