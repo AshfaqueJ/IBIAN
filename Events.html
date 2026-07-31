@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>IBIAN Club | The Dhaka Royale Gala — A Night of Bengali Grandeur</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js">
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ============================================================
+           VARIABLES & RESET (same as original)
+        ============================================================ */
+
+        :root {
+            --pure-black: #000000;
+            --deep-black: #0a0a0a;
+            --rich-black: #121212;
+            --gold: #d4af37;
+            --gold-light: #f5e18b;
+            --gold-dark: #b58c1a;
+            --white-soft: #f5f5f5;
+            --white-muted: #cccccc;
+            --burgundy: #800020;
+            --burgundy-glow: #a83246;
+            --bangla-green: #1e6b3b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background: var(--deep-black);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+
+        /* ============================================================
+           NAVIGATION (exactly as original)
+        ============================================================ */
+
+        .navigation {
+            height: 70px;
+            background: var(--pure-black);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid var(--gold);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            height: 100%;
+        }
+
+        .brand {
+            position: absolute;
+            padding-left: 8px;
+            left: 0;
+            top: 0;
+            line-height: 70px;
+            margin-left: -10vw;
+        }
+
+        .brand a {
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 48px;
+            font-family: "Lucida Handwriting", cursive;
+            transition: 0.3s;
+        }
+
+        .brand a:hover {
+            color: #fff2af;
+            filter: drop-shadow(0 0 5px var(--gold));
+        }
+
+        nav {
+            float: right;
+            height: 100%;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            margin-right: -12vw;
+        }
+
+        nav ul li {
+            float: left;
+            position: relative;
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 0 20px;
+            line-height: 69px;
+            background: var(--pure-black);
+            color: var(--white-soft);
+            text-decoration: none;
+            font-family: "Playfair Display", Georgia, serif;
+            font-size: 18px;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: var(--gold);
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 18px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transform: translateX(-50%);
+            transition: width 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        nav ul li a:hover::after {
+            width: calc(100% - 40px);
+        }
+
+        nav>ul>li>a:not(:only-child) {
+            padding-right: 35px;
+        }
+
+        nav>ul>li>a:not(:only-child)::before {
+            content: "▾";
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%) rotate(0deg);
+            color: var(--gold);
+            font-size: 14px;
+            transition: transform 0.35s ease;
+        }
+
+        nav>ul>li.dropdown-open>a:not(:only-child)::before {
+            transform: translateY(-50%) rotate(-180deg);
+        }
+
+        .nav-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 100;
+            min-width: 230px;
+            background: var(--pure-black);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-top: 2px solid var(--gold);
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px) scaleY(0.92);
+            transform-origin: top center;
+            pointer-events: none;
+            transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s ease;
+        }
+
+        .nav-dropdown.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scaleY(1);
+            pointer-events: auto;
+        }
+
+        .nav-dropdown li {
+            float: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+        }
+
+        .nav-dropdown li:last-child {
+            border-bottom: none;
+        }
+
+        .nav-dropdown li a {
+            padding: 13px 22px;
+            line-height: 1.4;
+            font-size: 15px;
+            background: transparent;
+            color: var(--white-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.22s ease, color 0.22s ease, padding-left 0.22s ease;
+        }
+
+        .nav-dropdown li a::after {
+            display: none;
+        }
+
+        .nav-dropdown li a::before {
+            content: '';
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--gold);
+            opacity: 0;
+            transform: scale(0);
+            flex-shrink: 0;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .nav-dropdown li a:hover {
+            background: rgba(212, 175, 55, 0.08);
+            color: var(--gold-light);
+            padding-left: 28px;
+        }
+
+        .nav-dropdown li a:hover::before {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .nav-mobile {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 70px;
+            height: 70px;
+            background: var(--pure-black);
+            border-bottom: 1px solid var(--gold);
+            z-index: 1100;
+        }
+
+        #nav-toggle {
+            position: absolute;
+            left: 18px;
+            top: 22px;
+            cursor: pointer;
+            padding: 10px 35px 16px 0;
+            display: block;
+        }
+
+        #nav-toggle span,
+        #nav-toggle span::before,
+        #nav-toggle span::after {
+            height: 5px;
+            width: 35px;
+            background: var(--gold);
+            position: absolute;
+            display: block;
+            content: "";
+            transition: 0.3s;
+        }
+
+        #nav-toggle span {
+            top: 0;
+            background: var(--gold);
+        }
+        #nav-toggle span::before {
+            top: -10px;
+        }
+        #nav-toggle span::after {
+            bottom: -10px;
+        }
+
+        #nav-toggle.active span {
+            background: transparent;
+        }
+        #nav-toggle.active span::before {
+            transform: rotate(45deg);
+            top: 0;
+            background: var(--gold);
+        }
+        #nav-toggle.active span::after {
+            transform: rotate(-45deg);
+            top: 0;
+            background: var(--gold);
+        }
+
+        @media (max-width: 798px) {
+            .nav-mobile {
+                display: block;
+            }
+            .navigation {
+                height: 70px;
+                overflow: visible;
+            }
+            nav {
+                float: none;
+                width: 100%;
+            }
+            nav ul.nav-list {
+                max-height: 0;
+                overflow: hidden;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                background: var(--pure-black);
+                border-top: 1px solid rgba(212, 175, 55, 0.3);
+                z-index: 999;
+                transition: max-height 0.35s ease;
+                box-shadow: 0 20px 30px rgba(0, 0, 0, 0.9);
+            }
+            nav ul.nav-list.nav-open {
+                max-height: 500px;
+                overflow-y: auto;
+            }
+            nav ul.nav-list>li {
+                float: none;
+                border-bottom: 1px solid #333;
+                width: 100%;
+            }
+            nav ul.nav-list>li>a {
+                padding: 14px 20px !important;
+                line-height: 1.4 !important;
+            }
+            nav ul li a::after {
+                bottom: 6px !important;
+                left: 20px !important;
+                transform: none !important;
+                height: 2px !important;
+            }
+            nav ul li a:hover::after {
+                width: calc(100% - 40px) !important;
+            }
+            .nav-dropdown {
+                position: static;
+                width: 100%;
+                background: #111;
+                border: none;
+                border-radius: 0;
+                box-shadow: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                pointer-events: none;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.35s ease;
+                padding-left: 20px;
+            }
+            .nav-dropdown.open {
+                max-height: 300px;
+                pointer-events: auto;
+            }
+            .brand {
+                margin-left: 0;
+                left: 20px;
+            }
+        }
+
+
+        /* ============================================================
+           EVENT SPOTLIGHT — DHAKA ROYALE GALA
+        ============================================================ */
+
+        /* ---- HERO ---- */
+        .gala-hero {
+            margin-top: 70px;
+            height: 70vh;
+            min-height: 500px;
+            background: radial-gradient(circle at 20% 10%, #1a0d08 0%, #000000 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-bottom: 2px solid var(--bangla-green);
+            overflow: hidden;
+        }
+
+        .gala-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 60% 30%, rgba(30, 107, 59, 0.15) 0%, transparent 60%),
+                repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.03) 0px, rgba(212, 175, 55, 0.03) 2px, transparent 2px, transparent 10px);
+            pointer-events: none;
+        }
+
+        .hero-overlay-gold {
+            position: relative;
+            z-index: 2;
+            max-width: 1100px;
+            padding: 0 24px;
+            animation: galaFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-overlay-gold .gala-badge {
+            display: inline-block;
+            background: rgba(30, 107, 59, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 8px 28px;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            font-weight: 300;
+        }
+
+        .hero-overlay-gold h1 {
+            font-size: 5rem;
+            font-family: Georgia, serif;
+            background: linear-gradient(135deg, #f5e18b, #d4af37, #b58c1a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 2px;
+            line-height: 1.1;
+        }
+
+        .hero-overlay-gold .sub-gold {
+            font-size: 1.6rem;
+            color: #e8d5b0;
+            margin-top: 16px;
+            font-family: "Times New Roman", serif;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+
+        .hero-overlay-gold .hero-divider {
+            width: 160px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 28px auto 24px;
+        }
+
+        .hero-overlay-gold .hero-tagline {
+            font-size: 1.2rem;
+            color: #bbbbbb;
+            max-width: 640px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        @keyframes galaFadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ---- MAIN CONTENT ---- */
+        .gala-main {
+            background: var(--deep-black);
+            padding: 80px 24px 120px;
+        }
+
+        .gala-container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* ---- INTRO BLURB ---- */
+        .gala-intro {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto 70px;
+        }
+
+        .gala-intro .ornament {
+            color: var(--gold);
+            font-size: 1.8rem;
+            letter-spacing: 12px;
+            opacity: 0.6;
+        }
+
+        .gala-intro h2 {
+            font-size: 2.6rem;
+            font-family: Georgia, serif;
+            color: var(--gold-light);
+            margin: 18px 0 24px;
+        }
+
+        .gala-intro p {
+            font-size: 1.12rem;
+            line-height: 1.9;
+            color: #cccccc;
+        }
+
+        .gala-intro p .gold-text {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .gala-intro p .green-text {
+            color: #5aa87a;
+            font-weight: 600;
+        }
+
+        /* ---- STATS RIBBON ---- */
+        .stats-ribbon {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            background: linear-gradient(135deg, #0e1a12, var(--rich-black));
+            border-radius: 60px;
+            padding: 48px 32px;
+            margin-bottom: 80px;
+            border: 1px solid rgba(30, 107, 59, 0.4);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .stat-number {
+            font-size: 3.4rem;
+            font-family: Georgia, serif;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: block;
+            line-height: 1.2;
+        }
+
+        .stat-item .stat-label {
+            font-size: 0.85rem;
+            color: #aaa;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-top: 6px;
+        }
+
+        /* ---- NARRATIVE BLOCKS ---- */
+        .narrative-block {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 50px;
+            margin-bottom: 80px;
+            align-items: center;
+        }
+
+        .narrative-block.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .narrative-image {
+            flex: 1.2;
+            min-height: 420px;
+            border-radius: 40px;
+            background-size: cover;
+            background-position: center;
+            border: 1px solid rgba(30, 107, 59, 0.3);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .narrative-image:hover {
+            transform: scale(1.01);
+            box-shadow: 0 30px 60px -10px rgba(30, 107, 59, 0.2);
+        }
+
+        .narrative-text {
+            flex: 1.5;
+        }
+
+        .narrative-text .section-tag {
+            display: inline-block;
+            background: rgba(30, 107, 59, 0.2);
+            color: #5aa87a;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            padding: 5px 16px;
+            border-radius: 40px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+
+        .narrative-text h3 {
+            font-size: 2.2rem;
+            font-family: Georgia, serif;
+            color: var(--gold-light);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .narrative-text p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #cfcfcf;
+            margin-bottom: 16px;
+        }
+
+        .narrative-text .quote-block {
+            background: rgba(212, 175, 55, 0.06);
+            border-left: 4px solid var(--gold);
+            padding: 20px 28px;
+            border-radius: 0 20px 20px 0;
+            margin: 22px 0 10px;
+            font-style: italic;
+            color: #e8d5b0;
+            font-size: 1.08rem;
+        }
+
+        .narrative-text .quote-block .attribution {
+            display: block;
+            margin-top: 10px;
+            font-style: normal;
+            font-size: 0.85rem;
+            color: #999;
+            letter-spacing: 0.5px;
+        }
+
+        /* ---- MENU SHOWCASE ---- */
+        .menu-showcase {
+            background: linear-gradient(145deg, #0e1a12, var(--rich-black));
+            border-radius: 48px;
+            padding: 60px 50px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            margin: 60px 0 80px;
+        }
+
+        .menu-showcase h3 {
+            font-size: 2.2rem;
+            font-family: Georgia, serif;
+            color: var(--gold-light);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .menu-showcase .menu-sub {
+            text-align: center;
+            color: #aaa;
+            font-size: 1.02rem;
+            margin-bottom: 40px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .menu-course {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 24px 20px;
+            border-radius: 32px;
+            border: 1px solid rgba(30, 107, 59, 0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .menu-course:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.04);
+            transform: translateY(-4px);
+        }
+
+        .menu-course .course-name {
+            color: var(--gold);
+            font-size: 1.2rem;
+            font-weight: 600;
+            font-family: Georgia, serif;
+            margin-bottom: 4px;
+        }
+
+        .menu-course .course-desc {
+            color: #bbb;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .menu-course .course-pairing {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: #5aa87a;
+            background: rgba(30, 107, 59, 0.15);
+            padding: 3px 14px;
+            border-radius: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ---- TESTIMONIALS ---- */
+        .testimonials-gala {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 60px 0 40px;
+        }
+
+        .testi-card {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 32px 28px;
+            border-radius: 32px;
+            border: 1px solid rgba(30, 107, 59, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .testi-card:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.04);
+        }
+
+        .testi-card .stars {
+            color: var(--gold);
+            font-size: 1rem;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+        }
+
+        .testi-card blockquote {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #ddd;
+            font-style: italic;
+        }
+
+        .testi-card .testi-name {
+            display: block;
+            margin-top: 14px;
+            font-style: normal;
+            color: var(--gold-light);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .testi-card .testi-title {
+            display: block;
+            font-style: normal;
+            color: #888;
+            font-size: 0.75rem;
+        }
+
+        /* ---- CTA ---- */
+        .gala-cta {
+            text-align: center;
+            margin-top: 80px;
+            padding: 56px 30px;
+            background: radial-gradient(circle at 50% 0%, rgba(30, 107, 59, 0.2), transparent 70%);
+            border-radius: 60px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .gala-cta h3 {
+            font-size: 2.4rem;
+            font-family: Georgia, serif;
+            color: var(--gold-light);
+            margin-bottom: 16px;
+        }
+
+        .gala-cta p {
+            max-width: 640px;
+            margin: 0 auto 32px;
+            color: #ccc;
+            font-size: 1.08rem;
+        }
+
+        .gala-cta .cta-button {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--pure-black);
+            padding: 18px 56px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 60px;
+            transition: all 0.3s ease;
+            font-family: Georgia, serif;
+            letter-spacing: 1px;
+            border: 2px solid transparent;
+        }
+
+        .gala-cta .cta-button:hover {
+            background: transparent;
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 1100px) {
+            .hero-overlay-gold h1 {
+                font-size: 4rem;
+            }
+            .stats-ribbon {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+                padding: 36px 24px;
+            }
+            .narrative-block,
+            .narrative-block.reverse {
+                flex-direction: column;
+            }
+            .narrative-image {
+                width: 100%;
+                min-height: 320px;
+            }
+            .menu-showcase {
+                padding: 40px 28px;
+            }
+            .gala-intro h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .hero-overlay-gold h1 {
+                font-size: 3rem;
+            }
+            .hero-overlay-gold .sub-gold {
+                font-size: 1.2rem;
+            }
+            .gala-hero {
+                min-height: 380px;
+                height: 60vh;
+            }
+            .stat-item .stat-number {
+                font-size: 2.4rem;
+            }
+            .narrative-text h3 {
+                font-size: 1.8rem;
+            }
+            .gala-cta h3 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .hero-overlay-gold h1 {
+                font-size: 2.2rem;
+            }
+            .stats-ribbon {
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+                padding: 28px 16px;
+                border-radius: 32px;
+            }
+            .stat-item .stat-number {
+                font-size: 2rem;
+            }
+            .gala-main {
+                padding: 50px 16px 80px;
+            }
+            .menu-showcase {
+                padding: 28px 16px;
+            }
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            .testimonials-gala {
+                grid-template-columns: 1fr;
+            }
+            .gala-cta .cta-button {
+                padding: 14px 32px;
+                font-size: 1rem;
+            }
+            .narrative-image {
+                min-height: 220px;
+                border-radius: 24px;
+            }
+        }
+
+
+        /* ============================================================
+           FOOTER (same as original)
+        ============================================================ */
+
+        .site-footer {
+            background: var(--pure-black);
+            border-top: 2px solid var(--gold);
+            font-family: Georgia, serif;
+        }
+
+        .footer-body {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px 50px;
+            display: grid;
+            grid-template-columns: 1.6fr 1fr 1fr 1fr;
+            gap: 50px;
+        }
+
+        .footer-brand .footer-logo {
+            filter: invert(100);
+            width: 150px;
+            display: block;
+            margin-bottom: 18px;
+        }
+
+        .footer-brand p {
+            color: #888;
+            font-size: 0.88rem;
+            max-width: 240px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .footer-social a {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.25s ease;
+        }
+
+        .footer-social a img {
+            width: 18px;
+            filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(320deg);
+            transition: filter 0.25s ease;
+        }
+
+        .footer-social a:hover {
+            background: var(--gold);
+        }
+        .footer-social a:hover img {
+            filter: brightness(0);
+        }
+
+        .footer-col h4 {
+            color: var(--gold);
+            font-size: 0.78rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .footer-col h4::after {
+            content: '';
+            display: block;
+            width: 28px;
+            height: 2px;
+            background: var(--gold);
+            margin-top: 8px;
+            opacity: 0.5;
+        }
+
+        .footer-links-list {
+            list-style: none;
+        }
+
+        .footer-links-list li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links-list a {
+            color: #999;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.25s ease, padding-left 0.25s ease;
+        }
+
+        .footer-links-list a:hover {
+            color: var(--gold-light);
+            padding-left: 6px;
+        }
+
+        .footer-contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .footer-contact-item i {
+            color: var(--gold);
+            font-size: 0.95rem;
+            margin-top: 3px;
+            width: 16px;
+        }
+
+        .footer-contact-item span,
+        .footer-contact-item a {
+            color: #999;
+            font-size: 0.88rem;
+            text-decoration: none;
+            transition: color 0.25s ease;
+        }
+
+        .footer-contact-item a:hover {
+            color: var(--gold-light);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 40px;
+            border-top: 1px solid rgba(212, 175, 55, 0.15);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .footer-bottom p {
+            color: #555;
+            font-size: 0.82rem;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-bottom-links a {
+            color: #555;
+            font-size: 0.82rem;
+            text-decoration: none;
+            transition: color 0.25s ease;
+        }
+
+        .footer-bottom-links a:hover {
+            color: var(--gold);
+        }
+
+        @media (max-width: 1000px) {
+            .footer-body {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
+            .footer-brand {
+                grid-column: 1 / -1;
+            }
+            .footer-brand p {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .footer-body {
+                grid-template-columns: 1fr;
+                padding: 40px 24px 36px;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+    NAVIGATION (unchanged)
+    ============================================================ -->
+    <section class="navigation">
+        <div class="nav-container">
+            <div class="brand"><a href="index.html">IBIAN</a></div>
+            <nav>
+                <div class="nav-mobile"><a id="nav-toggle" href="#!"><span></span></a></div>
+                <ul class="nav-list">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#!">Club Stories</a>
+                        <ul class="nav-dropdown">
+                            <li><a href="Our%20History.html">Our History</a></li>
+                            <li><a href="Founding%20Members.html">About the Founders</a></li>
+                            <li><a href="Our%20History.html">About Us</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#!">Our People</a>
+                        <ul class="nav-dropdown">
+                            <li><a href="Members.html">Meet the Curators</a></li>
+                            <li><a href="Partners.html">Friends & Partners</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="Restaurant.html">Restaurant</a></li>
+                    <li><a href="#!">Facilities</a>
+                        <ul class="nav-dropdown">
+                            <li><a href="Gym.html">Gym and Fitness</a></li>
+                            <li><a href="Pool.html">Pool Arrangements</a></li>
+                            <li><a href="Game%20Room.html">Sports and Games</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="Contact%20Us.html">Contact Us</a></li>
+                    <li><a href="Membership%20Form.html">Membership <i class="fas fa-arrow-right"></i></a></li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    HERO — THE DHAKA ROYALE GALA
+    ============================================================ -->
+    <section class="gala-hero">
+        <div class="hero-overlay-gold">
+            <div class="gala-badge"><i class="fas fa-crown"></i> 25 Years of Bengali Elegance</div>
+            <h1>The Dhaka Royale Gala</h1>
+            <div class="sub-gold">Where the Soul of Bengal Met the Pinnacle of Luxury</div>
+            <div class="hero-divider"></div>
+            <p class="hero-tagline">
+                On the 14th of December, 2024, IBIAN Dhaka turned twenty-five —
+                and the city of mosques and rivers paused to celebrate with us.
+                This is the story of the most magnificent night in Bangladeshi
+                social history.
+            </p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <section class="gala-main">
+        <div class="gala-container">
+
+            <!-- INTRO -->
+            <div class="gala-intro">
+                <div class="ornament">✦ ✦ ✦</div>
+                <h2>“Not a party — a celebration of Bengal.”</h2>
+                <p>
+                    <span class="gold-text">Three hundred and fifty distinguished guests</span>
+                    in exquisite Jamdani and silk, <span class="gold-text">eighty-seven bottles</span>
+                    of the finest Dom Pérignon flown in from Épernay,
+                    <span class="gold-text">three living legends</span> of Bangladeshi music,
+                    and a <span class="gold-text">grand ballroom</span> transformed into a
+                    dreamscape of <span class="green-text">Shapla (water lilies)</span> and
+                    <span class="gold-text">golden Kashar (brass)</span>.
+                    The IBIAN Club’s 25th Anniversary Gala wasn’t merely an event —
+                    it was a <span class="gold-text">declaration</span> that Dhaka
+                    now stands shoulder-to-shoulder with the great capitals of the world.
+                </p>
+            </div>
+
+            <!-- STATS RIBBON -->
+            <div class="stats-ribbon">
+                <div class="stat-item">
+                    <span class="stat-number">350</span>
+                    <span class="stat-label">Distinguished Guests</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">15</span>
+                    <span class="stat-label">Course Bengali Feast</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Living Legends (Music)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">$1.8M</span>
+                    <span class="stat-label">Raised for Artisan Welfare</span>
+                </div>
+            </div>
+
+            <!-- NARRATIVE 1: The Arrival -->
+            <div class="narrative-block">
+                <div class="narrative-image" style="background-image: url('https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1200'); background-position: center 30%;"></div>
+                <div class="narrative-text">
+                    <div class="section-tag"><i class="fas fa-door-open"></i> The Arrival</div>
+                    <h3>A Red Carpet Woven with Jamdani</h3>
+                    <p>
+                        At precisely 7:00 PM, the Grand Porte-Cochère of the IBIAN Dhaka
+                        House transformed into a <span class="gold-text">crimson and gold
+                        corridor</span> reminiscent of the Mughal era. Members arrived in
+                        chauffeur-driven Mercedes and BMWs — but the real spectacle was
+                        the attire. <span class="green-text">Jamdani sarees</span> with
+                        gold threadwork, <span class="gold-text">Panjabis</span> crafted
+                        from Dhaka muslin, and <span class="gold-text">Nakshi Kantha</span>
+                        stoles that told stories of rural Bengal. The paparazzi from
+                        <em>Daily Star Life</em>, <em>Ice Today</em>, and <em>Vogue India</em>
+                        captured every glittering moment.
+                    </p>
+                    <p>
+                        The dress code was <span class="gold-text">“Royal Bengal Noir”</span>:
+                        a fusion of traditional Bangladeshi craftsmanship and contemporary
+                        high fashion. One member arrived in a <span class="gold-text">vintage
+                        Rolls-Royce</span> that had once carried a Nawab of Dhaka — because
+                        at IBIAN, we don't just attend events; we <em>arrive</em> with history.
+                    </p>
+                    <div class="quote-block">
+                        “I have walked red carpets in Paris and New York, but nothing —
+                        absolutely nothing — compares to the sheer majesty of that
+                        IBIAN Dhaka entrance. It felt like stepping into a Tagore poem
+                        set to a modern symphony.”
+                        <span class="attribution">— Dr. Shahiduzzaman Khan, Patron Member since 2009</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NARRATIVE 2: The Ballroom (reverse) -->
+            <div class="narrative-block reverse">
+                <div class="narrative-image" style="background-image: url('https://images.unsplash.com/photo-1530023367847-a683933f4172?w=1200'); background-position: center 40%;"></div>
+                <div class="narrative-text">
+                    <div class="section-tag"><i class="fas fa-chandelier"></i> The Cathedral Ballroom</div>
+                    <h3>Where Light Became Art — and Bengal</h3>
+                    <p>
+                        The <span class="gold-text">Cathedral Ballroom</span> of IBIAN Dhaka —
+                        already legendary for its 40-foot ceilings and colonial-era archways —
+                        was utterly <span class="gold-text">reimagined</span> for the anniversary.
+                        A cascading <span class="gold-text">chandelier of 10,000 crystals</span>
+                        descended from the dome, but it was the <span class="green-text">floating
+                        Shapla (water lilies)</span> in brass urns and the massive
+                        <span class="gold-text">Nakshi Kantha tapestry</span> draped behind
+                        the stage that stole the show. <span class="gold-text">120 round tables</span>
+                        draped in ivory and green silk, each centered with a cascading
+                        arrangement of marigolds, roses, and orchids flown in from
+                        the Sundarbans.
+                    </p>
+                    <p>
+                        The <span class="gold-text">stage</span> was a masterpiece:
+                        a golden proscenium arch inspired by the <span class="green-text">Lalbagh Fort</span>,
+                        flanked by 15-foot LED screens that displayed live footage of
+                        the evening’s magic. The orchestra — a <span class="gold-text">28-piece
+                        ensemble</span> blending classical Western instruments with the
+                        <span class="gold-text">esraj, harmonium, and tabla</span> — struck
+                        the first chord at 8:15 PM, and the room <span class="gold-text">rose
+                        as one</span>.
+                    </p>
+                    <div class="quote-block">
+                        “I have been a member since the Dhaka chapter opened. I thought
+                        I had seen it all. Then I walked into that ballroom and I wept.
+                        It was not just beautiful — it was <em>Bengali</em>. It was
+                        <em>us</em>.”
+                        <span class="attribution">— Ms. Farhana Ahsan, Founding Member, Dhaka</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NARRATIVE 3: The Feast -->
+            <div class="narrative-block">
+                <div class="narrative-image" style="background-image: url('https://images.unsplash.com/photo-1552566626-52f8b828add9?w=1200'); background-position: center 50%;"></div>
+                <div class="narrative-text">
+                    <div class="section-tag"><i class="fas fa-utensils"></i> The Gastronomic Odyssey</div>
+                    <h3>Fifteen Courses of Bengali Brilliance</h3>
+                    <p>
+                        The menu was the <span class="gold-text">magnum opus</span> of
+                        Chef Tahmina Akhter and her brigade of twenty-two. Each course
+                        was a love letter to Bengal's culinary heritage, paired with
+                        rare vintages from the club's <span class="gold-text">2,500-bottle
+                        cellar</span>, curated by our Master Sommelier, Jean-Pierre Dubois.
+                        From the <span class="gold-text">opening amuse-bouche</span> —
+                        a delicate <span class="green-text">Fuchka (golgappa)</span> with
+                        spiced tamarind water and a hint of gold leaf — to the
+                        <span class="gold-text">final dessert</span> — a <span class="green-text">Gurer
+                        Payesh</span> (date jaggery rice pudding) with pistachio foam —
+                        every bite was a revelation.
+                    </p>
+                    <p>
+                        The <span class="gold-text">pièce de résistance</span> was the
+                        main course: a <span class="gold-text">Mutton Rezala</span> from
+                        the royal kitchens of Old Dhaka, paired with a <span class="gold-text">1998
+                        Château Margaux</span> that brought the room to a reverent hush.
+                        One member later called it <span class="gold-text">“the best meal
+                        of my life — and I have dined at every three-star in Europe.”</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- MENU SHOWCASE -->
+            <div class="menu-showcase">
+                <h3>✦ The Platinum Bengali Menu ✦</h3>
+                <p class="menu-sub">A fifteen-course symphony of Bengal's finest flavours, paired with the world's best vintages</p>
+                <div class="menu-grid">
+                    <div class="menu-course">
+                        <div class="course-name">Amuse-Bouche</div>
+                        <div class="course-desc">Fuchka (Golgappa), spiced tamarind water, gold leaf</div>
+                        <span class="course-pairing">Paired with: Moet & Chandon Impérial</span>
+                    </div>
+                    <div class="menu-course">
+                        <div class="course-name">First Course</div>
+                        <div class="course-desc">Chingri Malai Curry (Prawn in coconut milk)</div>
+                        <span class="course-pairing">Paired with: Chablis Grand Cru 2018</span>
+                    </div>
+                    <div class="menu-course">
+                        <div class="course-name">Second Course</div>
+                        <div class="course-desc">Ilish Machher Paturi (Hilsa in mustard)</div>
+                        <span class="course-pairing">Paired with: Sauvignon Blanc, Marlborough</span>
+                    </div>
+                    <div class="menu-course">
+                        <div class="course-name">Third Course</div>
+                        <div class="course-desc">Bhuna Khichuri, Borhan, and Beguni</div>
+                        <span class="course-pairing">Paired with: Meursault 2016</span>
+                    </div>
+                    <div class="menu-course">
+                        <div class="course-name">Fourth Course</div>
+                        <div class="course-desc">Murgir Kosha (Spiced chicken curry)</div>
+                        <span class="course-pairing">Paired with: Barolo Riserva 2013</span>
+                    </div>
+                    <div class="menu-course">
+                        <div class="course-name">Main Course</div>
+                        <div class="course-desc">Mutton Rezala, fragrant Basmati, saffron</div>
+                        <span class="course-pairing">Paired with: Château Margaux 1998</span>
+                    </div>
+                    <div class="menu-course">
+                        <div class="course-name">Palate Cleanser</div>
+                        <div class="course-desc">Aam Pora Sorbet (Roasted mango), mint</div>
+                        <span class="course-pairing">Paired with: Dom Pérignon Rosé 2008</span>
+                    </div>
+                    <div class="menu-course">
+                        <div class="course-name">Cheese Course</div>
+                        <div class="course-desc">Artisanal selection, fig jam, honey from the Sundarbans</div>
+                        <span class="course-pairing">Paired with: Taylor’s 1994 Port</span>
+                    </div>
+                    <div class="menu-course">
+                        <div class="course-name">Pre-Dessert</div>
+                        <div class="course-desc">Shondesh, rose water, gold leaf</div>
+                        <span class="course-pairing">Paired with: Laurent-Perrier Grand Siècle</span>
+                    </div>
+                    <div class="menu-course">
+                        <div class="course-name">Dessert</div>
+                        <div class="course-desc">Gurer Payesh, pistachio foam, edible flower</div>
+                        <span class="course-pairing">Paired with: Château Rieussec 2001</span>
+                    </div>
+                    <div class="menu-course">
+                        <div class="course-name">Pitha Platter</div>
+                        <div class="course-desc">Bhapa, Patishapta, Pulir Pitha, with date molasses</div>
+                        <span class="course-pairing">Paired with: Vintage Armagnac 1978</span>
+                    </div>
+                    <div class="menu-course">
+                        <div class="course-name">Finale</div>
+                        <div class="course-desc">Paan and chocolate truffles, silver leaf</div>
+                        <span class="course-pairing">Paired with: Graham’s 1994 Port</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NARRATIVE 4: The Performances -->
+            <div class="narrative-block reverse">
+                <div class="narrative-image" style="background-image: url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=1200'); background-position: center 50%;"></div>
+                <div class="narrative-text">
+                    <div class="section-tag"><i class="fas fa-music"></i> The Stage</div>
+                    <h3>Three Legends, One Unforgettable Night</h3>
+                    <p>
+                        The entertainment was <span class="gold-text">nothing short of
+                        historic</span>. At 10:00 PM, the <span class="gold-text">legendary
+                        Runa Laila</span> took the stage for a spellbinding 45-minute
+                        set — her voice weaving through classics like “Aaj Shonar
+                        Bangladesh” and “Chand Ki Tarah” as the chandelier dimmed to
+                        a warm amber glow. Members swayed, some with tears, as she
+                        dedicated a song to the spirit of Dhaka.
+                    </p>
+                    <p>
+                        At midnight, the room erupted as <span class="gold-text">Shafin
+                        Ahmed</span> (of Miles) launched into a high-energy medley of
+                        rock, folk, and soul that had even the most reserved members
+                        on their feet. The <span class="gold-text">grand finale</span>
+                        came at 1:30 AM: a surprise appearance by <span class="gold-text">Rezwana
+                        Choudhury Bannya</span>, who performed a soul-stirring rendition
+                        of “O Amar Desher Mati” from the mezzanine balcony as the
+                        chandelier rained golden confetti over the crowd.
+                        <span class="gold-text">Three hundred and fifty people wept</span> —
+                        unashamedly, joyfully, together — in a moment of pure Bengali
+                        pride.
+                    </p>
+                    <div class="quote-block">
+                        “I have performed for heads of state, for the Queen, for
+                        audiences around the globe. But that night at IBIAN Dhaka —
+                        the energy, the love, the sheer <em>Bangaliana</em> in that
+                        room — it was unlike anything I have ever experienced.
+                        I will carry it in my heart forever.”
+                        <span class="attribution">— Runa Laila, in a letter to the Club</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TESTIMONIALS -->
+            <div class="testimonials-gala">
+                <div class="testi-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <blockquote>
+                        “The Dhaka Royale Gala wasn’t just a party — it was a
+                        <em>reclamation</em>. A reclamation of Bengali elegance on
+                        the world stage. I left feeling like I had been part of
+                        something that will be spoken of for generations.”
+                    </blockquote>
+                    <span class="testi-name">— Mahfuz Anam</span>
+                    <span class="testi-title">Member since 2015</span>
+                </div>
+                <div class="testi-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <blockquote>
+                        “The food was divine. The music was transcendent. But what
+                        I will remember most is the <strong>feeling of belonging</strong>.
+                        At IBIAN Dhaka, you are not a guest. You are <em>family</em> —
+                        a family that spans generations.”
+                    </blockquote>
+                    <span class="testi-name">— Mr. Latifur Rahman</span>
+                    <span class="testi-title">Patron Member, 15 years</span>
+                </div>
+                <div class="testi-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <blockquote>
+                        “I have attended galas in London, Dubai, and Singapore.
+                        The IBIAN 25th Anniversary Gala in Dhaka was
+                        <strong>the single most magnificent event</strong> I have
+                        ever witnessed. The fusion of global luxury with Bengali
+                        soul was <em>perfection</em>.”
+                    </blockquote>
+                    <span class="testi-name">— Shajeeb Wazed</span>
+                    <span class="testi-title">Honorary Member, London</span>
+                </div>
+            </div>
+
+            <!-- FINAL CTA -->
+            <div class="gala-cta">
+                <h3>✦ This Could Have Been You ✦</h3>
+                <p>
+                    The Dhaka Royale Gala is now part of IBIAN legend. But the
+                    story continues — and the next chapter is waiting for
+                    <strong>you</strong>. Our upcoming calendar features intimate
+                    wine salons, private concerts, and the much-anticipated
+                    <strong>Poush Utsab (Winter Festival)</strong> (January 2026).
+                    Don't just hear about the magic — <span class="gold-text">live it</span>.
+                </p>
+                <a href="Membership%20Form.html" class="cta-button">
+                    <i class="fas fa-crown"></i> Join the Legacy
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ============================================================
+    FOOTER (unchanged)
+    ============================================================ -->
+    <footer class="site-footer">
+        <div class="footer-body">
+            <div class="footer-col footer-brand">
+                <img class="footer-logo" src="Logo.png" alt="The IBIAN Club Logo">
+                <p>A premier social club dedicated to excellence, connection, and unforgettable experiences — serving members for over 25 years.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Facebook"><img src="Facebook.png" alt="Facebook"></a>
+                    <a href="#" aria-label="Instagram"><img src="Instagram.png" alt="Instagram"></a>
+                    <a href="#" aria-label="Twitter"><img src="Twitter.png" alt="Twitter"></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul class="footer-links-list">
+                    <li><a href="Index.html">Home</a></li>
+                    <li><a href="News.html">Club Stories</a></li>
+                    <li><a href="Meet%20the%20Team.html">Meet the Curators</a></li>
+                    <li><a href="Blog.html">About Us</a></li>
+                    <li><a href="Achievements.html">Milestones</a></li>
+                    <li><a href="Collaborators.html">Partnerships</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul class="footer-links-list">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                    <li><a href="#">Club Rules</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>1 Monarch Lane<br>Beverly Hills, California</span></div>
+                <div class="footer-contact-item"><i class="fas fa-phone"></i><a href="tel:+15555555555">+1 555 555 5555</a></div>
+                <div class="footer-contact-item"><i class="fas fa-envelope"></i><a href="mailto:concierge@IBIANclub.com">concierge@IBIANclub.com</a></div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2015 The IBIAN Club. All rights reserved.</p>
+            <div class="footer-bottom-links"><a href="Policies.html">Privacy</a><a href="#">Terms</a><a href="Membership%20Form.html">Membership</a></div>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+    SCRIPTS (same as original)
+    ============================================================ -->
+    <script>
+        // MOBILE NAVIGATION
+        document.addEventListener("DOMContentLoaded", () => {
+            const isMobile = () => window.innerWidth <= 798;
+            const toggleBtn = document.getElementById("nav-toggle");
+            const navList = document.querySelector("ul.nav-list");
+
+            if (toggleBtn && navList) {
+                toggleBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleBtn.classList.toggle("active");
+                    navList.classList.toggle("nav-open");
+                });
+            }
+
+            document.querySelectorAll('nav ul li > a:not(:only-child)').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 798) e.preventDefault();
+                    e.stopPropagation();
+                    const parent = this.parentElement;
+                    const dropdown = this.nextElementSibling;
+                    const isOpen = dropdown && dropdown.classList.contains('open');
+                    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+                    document.querySelectorAll('nav ul li').forEach(li => li.classList.remove(
+                    'dropdown-open'));
+                    if (dropdown && !isOpen) {
+                        dropdown.classList.add('open');
+                        parent.classList.add('dropdown-open');
+                    }
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.navigation')) {
+                    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+                    document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('dropdown-open'));
+                    if (isMobile() && navList && toggleBtn) {
+                        navList.classList.remove('nav-open');
+                        toggleBtn.classList.remove('active');
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
