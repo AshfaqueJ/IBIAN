@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>The IBIAN Club | Gold & Black Gallery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+
+    /* ============================================================
+       VARIABLES & RESET
+    ============================================================ */
+
+    :root {
+      --pure-black:  #000000;
+      --deep-black:  #0a0a0a;
+      --rich-black:  #121212;
+      --gold:        #d4af37;
+      --gold-light:  #f5e18b;
+      --gold-dark:   #b58c1a;
+      --white-soft:  #f5f5f5;
+      --white-muted: #cccccc;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background: var(--deep-black);
+      color: #e0e0e0;
+      overflow-x: hidden;
+    }
+
+
+    /* ============================================================
+       NAVIGATION
+    ============================================================ */
+
+    .navigation {
+      height: 70px;
+      background: var(--pure-black);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      border-bottom: 1px solid var(--gold);
+      box-shadow: 0 2px 15px rgba(0,0,0,0.8);
+    }
+
+    .nav-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      position: absolute;
+      padding-left: 8px;
+      float: left;
+      line-height: 70px;
+      margin-left:-10vw;
+    }
+
+    .brand a {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 48px;
+      font-family: "Lucida Handwriting", cursive;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .brand a:hover {
+      color: #fff2af;
+      filter: drop-shadow(0 0 5px var(--gold));
+    }
+
+    nav { float: right; }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      margin-right:-12vw;
+    }
+
+    nav ul li {
+      float: left;
+      position: relative;
+    }
+
+    nav ul li a {
+      display: block;
+      padding: 0 20px;
+      line-height: 69px;
+      background: var(--pure-black);
+      color: var(--white-soft);
+      text-decoration: none;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 18px;
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover { color: var(--gold); }
+
+    /* Underline slide-in on hover */
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: translateX(-50%);
+      transition: width 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    nav ul li a:hover::after { width: calc(100% - 40px); }
+
+    /* Dropdown chevron — top-level triggers only */
+    nav > ul > li > a:not(:only-child) { padding-right: 35px; }
+
+    nav > ul > li > a:not(:only-child)::before {
+      content: "▾";
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%) rotate(0deg);
+      color: var(--gold);
+      font-size: 14px;
+      transition: transform 0.35s ease;
+    }
+
+    nav > ul > li.dropdown-open > a:not(:only-child)::before {
+      transform: translateY(-50%) rotate(-180deg);
+    }
+
+    /* Dropdown panel */
+    .nav-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 100;
+      min-width: 230px;
+      background: var(--pure-black);
+      border: 1px solid rgba(212,175,55,0.4);
+      border-top: 2px solid var(--gold);
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.7);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scaleY(0.92);
+      transform-origin: top center;
+      pointer-events: none;
+      transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16,1,0.3,1), visibility 0.28s ease;
+    }
+
+    .nav-dropdown.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scaleY(1);
+      pointer-events: auto;
+    }
+
+    .nav-dropdown li {
+      float: none;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .nav-dropdown li:last-child { border-bottom: none; }
+
+    .nav-dropdown li a {
+      padding: 13px 22px;
+      line-height: 1.4;
+      font-size: 15px;
+      background: transparent;
+      color: var(--white-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.22s ease, color 0.22s ease, padding-left 0.22s ease;
+    }
+
+    .nav-dropdown li a::after { display: none; }
+
+    .nav-dropdown li a::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0;
+      transform: scale(0);
+      flex-shrink: 0;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .nav-dropdown li a:hover {
+      background: rgba(212,175,55,0.08);
+      color: var(--gold-light);
+      padding-left: 28px;
+    }
+
+    .nav-dropdown li a:hover::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Mobile hamburger button */
+    .nav-mobile {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 70px;
+      height: 70px;
+      background: var(--pure-black);
+      border-bottom: 1px solid var(--gold);
+    }
+
+    #nav-toggle {
+      position: absolute;
+      left: 18px;
+      top: 22px;
+      cursor: pointer;
+      padding: 10px 35px 16px 0;
+      display: block;
+    }
+
+    #nav-toggle span,
+    #nav-toggle span::before,
+    #nav-toggle span::after {
+      height: 5px;
+      width: 35px;
+      background: var(--gold);
+      position: absolute;
+      display: block;
+      content: "";
+      transition: 0.3s;
+    }
+
+    #nav-toggle span::before { top: -10px; }
+    #nav-toggle span::after  { bottom: -10px; }
+
+    #nav-toggle.active span           { background: transparent; }
+    #nav-toggle.active span::before   { transform: rotate(45deg);  top: 0; }
+    #nav-toggle.active span::after    { transform: rotate(-45deg); top: 0; }
+
+
+    /* ============================================================
+       HERO SLIDER
+    ============================================================ */
+
+    .hero {
+      height: 100vh;
+      margin-top: 70px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slides {
+      height: 100%;
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 1;
+    }
+
+    .slide.active { opacity: 1; }
+
+    .hero-content {
+      margin-left: 8%;
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+    }
+
+    .hero-content h1 {
+      font-size: 84px;
+      font-family: Georgia, serif;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 20px;
+    }
+
+    .hero-content p {
+      font-size: 22px;
+      color: #e0e0e0;
+    }
+
+    .arrows {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 10;
+    }
+
+    .arrow {
+      width: 50px;
+      height: 50px;
+      background: rgba(0,0,0,0.7);
+      border-radius: 50%;
+      border: 1px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--gold);
+      font-size: 28px;
+      transition: 0.3s;
+    }
+
+    .arrow:hover { background: var(--gold); color: black; transform: scale(1.1); }
+
+    .dots {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      background: #aaa;
+      border-radius: 50%;
+      opacity: 0.5;
+      cursor: pointer;
+    }
+
+    .dot.active { opacity: 1; background: var(--gold); transform: scale(1.2); }
+
+
+    /* ============================================================
+       GALLERY CAROUSEL
+    ============================================================ */
+
+    .gallery-section {
+      position: relative;
+      padding: 80px 20px;
+      background: linear-gradient(180deg, var(--pure-black) -10%, var(--deep-black) 2%, var(--deep-black) 97%);
+      z-index: 3;
+      overflow: hidden;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 3.6rem;
+      color: var(--gold);
+      font-family: Georgia, serif;
+      margin-bottom: 10px;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--white-muted);
+      max-width: 700px;
+      margin: 0 auto 50px;
+      font-size: 1.2rem;
+    }
+
+    .carousel-wrapper {
+      position: relative;
+      overflow: hidden;
+      padding: 20px 0;
+    }
+
+    .gallery-carousel {
+      display: flex;
+      gap: 30px;
+      padding: 20px 15px;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .gallery-item {
+      flex: 0 0 calc(33.333% - 20px);
+      background: var(--rich-black);
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid rgba(212,175,55,0.3);
+      transform: scale(0.95);
+      opacity: 0.9;
+      transition: all 0.4s ease;
+    }
+
+    .gallery-item.active {
+      opacity: 1;
+      transform: scale(1);
+      border-color: var(--gold);
+      box-shadow: 0 6px 15px rgba(212,175,55,0.2);
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: var(--gold);
+      box-shadow: 0 15px 35px rgba(212,175,55,0.3);
+    }
+
+    .gallery-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    .gallery-item:hover .gallery-img { transform: scale(1.05); }
+
+    .gallery-content { padding: 20px; }
+
+    .gallery-title {
+      font-size: 1.3rem;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+    }
+
+    .gallery-desc {
+      color: var(--white-muted);
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    
+    .lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox.active {
+  display: flex;
+}
+
+.lightbox-img {
+  max-width: 85vw;
+  max-height: 80vh;
+  border: 2px solid var(--gold);
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.lightbox-caption {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--white-soft);
+  font-family: Georgia, serif;
+  text-align: center;
+}
+
+.lightbox-close,
+.lightbox-prev,
+.lightbox-next {
+  position: absolute;
+  color: var(--gold);
+  font-size: 36px;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.lightbox-close:hover,
+.lightbox-prev:hover,
+.lightbox-next:hover {
+  color: var(--gold-light);
+  transform: scale(1.1);
+}
+
+.lightbox-close { top: 30px; right: 40px; }
+.lightbox-prev  { left: 30px; top: 50%; transform: translateY(-50%); }
+.lightbox-next  { right: 30px; top: 50%; transform: translateY(-50%); }
+    .carousel-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .carousel-arrow {
+      width: 50px;
+      height: 50px;
+      background: #1f1f1f;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .carousel-arrow:hover    { background: var(--gold); color: black; transform: scale(1.1); }
+    .carousel-arrow:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .carousel-dots {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .carousel-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.4);
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .carousel-dot.active { background: var(--gold); transform: scale(1.3); }
+
+    .carousel-info {
+      text-align: center;
+      color: var(--white-muted);
+      margin-top: 20px;
+    }
+
+
+    /* ============================================================
+       PARTNER CAROUSEL
+    ============================================================ */
+
+    .partner-section {
+      background: #050505;
+      padding: 80px 20px;
+      border-top: 1px solid rgba(212,175,55,0.3);
+      border-bottom: 1px solid rgba(212,175,55,0.3);
+    }
+
+    .partner-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .partner-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .partner-header h2 {
+      font-size: 2.8rem;
+      color: var(--gold);
+      font-family: Georgia, serif;
+    }
+
+    .partner-header p {
+      color: var(--white-muted);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 10px auto 0;
+    }
+
+    .partner-carousel-wrapper {
+      position: relative;
+      overflow: hidden;
+      padding: 20px 0;
+    }
+
+    .partner-carousel {
+      display: flex;
+      gap: 40px;
+      transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+
+    .partner-card {
+      flex: 0 0 calc(25% - 30px);
+      background: var(--rich-black);
+      border-radius: 24px;
+      padding: 30px 20px;
+      text-align: center;
+      border: 1px solid rgba(212,175,55,0.4);
+      backdrop-filter: blur(2px);
+      transition: all 0.4s ease;
+    }
+
+    .partner-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--gold);
+      box-shadow: 0 20px 35px rgba(212,175,55,0.2);
+      background: #111;
+    }
+
+    .partner-logo {
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 20px;
+      background: #1e1e1e;
+      border-radius: 60px;
+      border: 1px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s;
+    }
+
+    .partner-card:hover .partner-logo {
+      background: var(--gold);
+      box-shadow: 0 0 15px rgba(212,175,55,0.5);
+    }
+
+    .partner-logo i {
+      font-size: 52px;
+      color: var(--gold);
+      transition: 0.3s;
+    }
+
+    .partner-card:hover .partner-logo i { color: #000; }
+
+    .partner-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+    }
+
+    .partner-desc {
+      font-size: 0.85rem;
+      color: #aaa;
+      
+    }
+
+    .partner-arrows {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .partner-arrow {
+      pointer-events: auto;
+      width: 48px;
+      height: 48px;
+      background: rgba(0,0,0,0.8);
+      border-radius: 50%;
+      border: 1px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--gold);
+      font-size: 24px;
+      transition: 0.25s;
+    }
+
+    .partner-arrow:hover { background: var(--gold); color: black; transform: scale(1.1); }
+
+
+    /* ============================================================
+       HIGHLIGHT SECTIONS (ALL THREE)
+    ============================================================ */
+
+    .new-highlight {
+      background: linear-gradient(145deg, var(--deep-black) 0%, #030303 100%);
+      padding: 100px 20px;
+    }
+
+    .new-highlight-2 {
+      background: linear-gradient(145deg, #030303 0%, var(--deep-black) 100%);
+      padding: 100px 20px;
+      border-top: 1px solid rgba(212,175,55,0.2);
+      border-bottom: 1px solid rgba(212,175,55,0.2);
+    }
+
+    .new-highlight-3 {
+      background: linear-gradient(145deg, var(--deep-black) 0%, #030303 100%);
+      padding: 100px 20px;
+    }
+
+    .highlight-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 70px;
+      flex-wrap: wrap;
+    }
+
+    .highlight-container.reverse {
+      flex-direction: row-reverse;
+    }
+
+    .highlight-image {
+      flex: 1.2;
+      border-radius: 30px;
+      overflow: hidden;
+      border: 2px solid rgba(212,175,55,0.5);
+      box-shadow: 0 20px 30px -15px rgba(0,0,0,0.6);
+      transition: 0.4s;
+    }
+
+    .highlight-image:hover { border-color: var(--gold); transform: scale(1.01); }
+
+    .highlight-image img {
+      width: 100%;
+      height: 480px;
+      object-fit: cover;
+      display: block;
+      transition: 0.5s;
+    }
+
+    .highlight-image:hover img { transform: scale(1.03); }
+
+    .highlight-text { flex: 1; }
+
+    .highlight-text h2 {
+      font-size: 3rem;
+      color: var(--gold);
+      font-family: Georgia, serif;
+      letter-spacing: -0.5px;
+      margin-bottom: 25px;
+    }
+
+    .gold-accent {
+      width: 80px;
+      height: 3px;
+      background: var(--gold);
+      margin: 20px 0 25px;
+    }
+
+    .highlight-text p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #ddd;
+      margin-bottom: 30px;
+    }
+
+    .highlight-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: transparent;
+      border: 2px solid var(--gold);
+      padding: 14px 38px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--gold);
+      border-radius: 50px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: 0.3s;
+    margin-left:10vw;
+    }
+
+    .highlight-btn i { transition: 0.3s; }
+
+    .highlight-btn:hover {
+      background: var(--gold);
+      color: black;
+      box-shadow: 0 5px 20px rgba(212,175,55,0.4);
+    }
+
+    .highlight-btn:hover i { transform: translateX(6px); color: black; }
+
+
+    #JoinUs{
+      margin-left:-2vw;
+    }
+    
+    
+    #new-ones{
+      margin-left: 42vw;
+      margin-top: 15px;
+    }
+    
+    #new-twos{
+      margin-left: 42vw;
+      margin-top: 15px;
+    }
+    
+    .membership-container {
+      text-align: center;
+    }
+    
+    .membership-container div {
+      justify-content: center;
+    }
+    
+    
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+
+    .site-footer {
+      background: var(--pure-black);
+      border-top: 2px solid var(--gold);
+      position: relative;
+      z-index: 3;
+      font-family: Georgia, serif;
+    }
+
+    .footer-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 40px 50px;
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1fr;
+      gap: 50px;
+    }
+
+    .footer-brand .footer-logo {
+      filter: invert(100) ;
+      width: 150px;
+      display: block;
+      margin-bottom: 18px;
+    }
+
+    .footer-brand p {
+      color: #888;
+      font-size: 0.88rem;
+      line-height: 1.75;
+      font-family: Arial, sans-serif;
+      max-width: 240px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .footer-social a {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(212,175,55,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.25s;
+    }
+
+    .footer-social a img {
+      width: 18px;
+      filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(320deg);
+      transition: 0.25s;
+    }
+
+    .footer-social a:hover             { background: var(--gold); border-color: var(--gold); }
+    .footer-social a:hover img         { filter: brightness(0); }
+
+    .footer-col h4 {
+      color: var(--gold);
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      font-family: Arial, sans-serif;
+      font-weight: 700;
+    }
+
+    .footer-col h4::after {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 2px;
+      background: var(--gold);
+      margin-top: 8px;
+      opacity: 0.5;
+    }
+
+    .footer-links-list { list-style: none; }
+
+    .footer-links-list li { margin-bottom: 10px; }
+
+    .footer-links-list a {
+      color: #999;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-family: Arial, sans-serif;
+      display: inline-block;
+      transition: color 0.2s, padding-left 0.2s;
+    }
+
+    .footer-links-list a:hover { color: var(--gold-light); padding-left: 6px; }
+
+    .footer-contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+      font-family: Arial, sans-serif;
+    }
+
+    .footer-contact-item i {
+      color: var(--gold);
+      font-size: 0.95rem;
+      margin-top: 3px;
+      width: 16px;
+      flex-shrink: 0;
+    }
+
+    .footer-contact-item span,
+    .footer-contact-item a {
+      color: #999;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-contact-item a:hover { color: var(--gold-light); }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 40px;
+      border-top: 1px solid rgba(212,175,55,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-bottom p {
+      color: #555;
+      font-size: 0.82rem;
+      font-family: Arial, sans-serif;
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-bottom-links a {
+      color: #555;
+      font-size: 0.82rem;
+      font-family: Arial, sans-serif;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-bottom-links a:hover { color: var(--gold); }
+
+
+    /* ============================================================
+       RESPONSIVE (preserved)
+    ============================================================ */
+
+    @media (max-width: 1200px) {
+      
+       #new-ones{
+      margin-left: 35vw;
+      margin-top: 15px;
+    }
+    
+    #new-twos{
+      margin-left: 42vw;
+      margin-top: 15px;
+    }
+    
+    }
+
+    @media (max-width: 1100px) {
+      .partner-card { flex: 0 0 calc(33.33% - 27px); }
+      .brand{
+        margin-left:-2vw;
+      }
+      
+       
+       #new-ones{
+      margin-left: 35vw;
+      margin-top: 15px;
+    }
+    
+    #new-twos{
+      margin-left: 42vw;
+      margin-top: 15px;
+    }
+    }
+
+    @media (max-width: 1050px) {
+    
+      .brand{
+        margin-left:-2vw;
+      }
+    }
+    
+    @media (max-width: 1000px) {
+      .footer-body            { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .footer-brand           { grid-column: 1 / -1; }
+      .footer-brand p         { max-width: 100%; }
+      .brand{
+        margin-left:2vw;
+      }
+    }
+
+    
+    
+    @media (max-width: 950px) {
+      .highlight-container    { flex-direction: column; text-align: center; }
+      .highlight-container.reverse { flex-direction: column; }
+      .highlight-text h2      { font-size: 2.2rem; }
+      .gold-accent            { margin-left: auto; margin-right: auto; }
+    }
+
+    @media (max-width: 800px) {
+      .partner-card { flex: 0 0 calc(50% - 20px); }
+       
+       #new-ones{
+      margin-left: 27vw;
+      margin-top: 15px;
+    }
+    
+    #new-twos{
+      margin-left: 27vw;
+      margin-top: 15px;
+    }
+    }
+
+    @media (max-width: 798px) {
+      .nav-mobile             { display: block; }
+      nav                     { width: 100%; padding: 70px 0 15px; }
+      nav ul                  { display: none; width: 100%; }
+      nav ul li               { float: none; border-bottom: 1px solid #333; width: 100%; }
+      nav ul li a             { padding: 15px 20px; line-height: 20px; }
+      nav ul li a::after      { bottom: 8px; left: 20px; transform: translateX(0); }
+      nav ul li a:hover::after { width: calc(100% - 40px); left: 20px; }
+      nav > ul > li > a:not(:only-child)::before { right: 15px; }
+      .nav-dropdown {
+        position: static;
+        width: 100%;
+        background: #111;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        pointer-events: auto;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease;
+      }
+      .nav-dropdown.open      { max-height: 300px; }
+      .nav-dropdown li {
+        opacity: 1;
+        transform: none;
+        transition: none;
+        border-bottom: 1px solid #222;
+      }
+      .nav-dropdown li a      { padding: 13px 20px 13px 40px; line-height: 1.4; }
+    }
+
+    @media (max-width: 768px) {
+      .hero-content h1        { font-size: 40px; }
+      .hero-content p         { font-size: 18px; }
+      .section-title          { font-size: 2rem; }
+      .gallery-item           { flex: 0 0 100%; }
+      .content-container      { flex-direction: column; }
+    }
+
+    @media (max-width: 600px) {
+      .footer-body            { grid-template-columns: 1fr; padding: 40px 24px 36px; }
+      .footer-bottom          { flex-direction: column; align-items: center; text-align: center; padding: 20px 24px; }
+    }
+
+    @media (max-width: 576px) {
+      .hero-content h1        { font-size: 28px; }
+      .content-image img      { height: 300px; }
+    }
+
+    @media (max-width: 550px) {
+      .partner-card           { flex: 0 0 100%; }
+    }
+
+    @media (min-width: 799px) {
+      .nav-list { display: block !important; }
+      .nav-dropdown li {
+        opacity: 0;
+        transform: translateX(-6px);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+      .nav-dropdown.open li              { opacity: 1; transform: translateX(0); }
+      .nav-dropdown.open li:nth-child(1) { transition-delay: 0.04s; }
+      .nav-dropdown.open li:nth-child(2) { transition-delay: 0.09s; }
+      .nav-dropdown.open li:nth-child(3) { transition-delay: 0.14s; }
+      .nav-dropdown.open li:nth-child(4) { transition-delay: 0.19s; }
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION - brand changed to social club name -->
+<section class="navigation">
+  <div class="nav-container">
+    <div class="brand"><a href="index.html">IBIAN</a></div>
+    <nav>
+      <div class="nav-mobile"><a id="nav-toggle" href="#!"><span></span></a></div>
+      <ul class="nav-list">
+        <li><a href="index.html">Home</a>
+        </li>
+        <li>
+          <a href="#!">Club Stories</a>
+        <ul class="nav-dropdown">
+            <li><a href="Our%20History.html">Our History</a></li>
+            <li><a href="Founding%20Members.html">About the Founders</a></li>
+           <li><a href="Our%20History.html">About Us</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#!">Our People</a>
+          <ul class="nav-dropdown">
+            <li><a href="Members.html">Meet the Curators</a></li>
+            <li><a href="Partners.html">Friends & Partners</a></li>
+          </ul>
+        </li>
+        <li><a href="Restaurant.html">Restaurant</a></li>
+        <li>
+          <a href="#!">Facilities</a>
+          <ul class="nav-dropdown">
+            <li><a href="Gym.html">Gym and Fitness</a></li>
+            <li><a href="Pool.html">Pool Arrangements</a></li>
+            <li><a href="Game%20Room.html">Sports and Games</a></li>
+          </ul>
+        </li>
+        <li><a href="Contact%20Us.html">Contact Us</a></li>
+        <li><a href="Membership%20Form.html">Membership <i class="fas fa-arrow-right"></i></a></li>
+      </ul>
+    </nav>
+  </div>
+</section>
+
+
+<!-- HERO SLIDER - updated with social club imagery and text -->
+<section class="hero">
+  <div class="slides">
+    <div class="slide active" style="background-image: url('Gala.jpg');">
+      <div class="hero-content">
+        <h1>Where Elegance Meets Community</h1>
+        <p>Over 25 years of curating unforgettable experiences. The premier social club for those who appreciate the finer things.</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image: url('Something.jpg');">
+      <div class="hero-content">
+        <h1>Moments That Define Us</h1>
+        <p>From exclusive galas to intimate gatherings — experiences crafted with care and sophistication.</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1528605105345-5344ea20e269?w=1600');">
+      <div class="hero-content">
+        <h1>A Legacy of Connection</h1>
+        <p>Discover the stories behind our most celebrated events and the members who make our club extraordinary.</p>
+      </div>
+    </div>
+  </div>
+  <div class="arrows">
+    <div class="arrow left">&#10094;</div>
+    <div class="arrow right">&#10095;</div>
+  </div>
+  <div class="dots"></div>
+</section>
+
+
+<!-- GALLERY CAROUSEL - updated with club events -->
+<section class="gallery-section">
+  <div class="gallery-container">
+    <h2 class="section-title">Our Legacy in Frames</h2>
+    <p class="section-subtitle">Moments, milestones, and memories from our finest gatherings — click on any image to open the full gallery viewer.</p>
+    <div class="carousel-wrapper">
+      <div class="gallery-carousel" id="galleryCarousel"></div>
+    </div>
+    <div class="carousel-nav">
+      <button class="carousel-arrow" id="prevGalleryBtn" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
+      <div class="carousel-dots" id="galleryDots"></div>
+      <button class="carousel-arrow" id="nextGalleryBtn" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+    </div>
+    <div class="carousel-info">Showing <span id="currentGalleryRange">1-3</span> of <span id="totalGalleryItems">12</span> memories</div>
+  </div>
+  <a href="Gallery.html" class="highlight-btn" id="new-ones">View More <i class="fas fa-arrow-right"></i></a>
+  <div class="section-divider" ></div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- SECTION 1 - FIRST HIGHLIGHT (Facilities: lounges, halls, pools, gyms) -->
+<!-- Ctrl+F: SECTION-1-HIGHLIGHT, SECTION-1-TITLE, SECTION-1-BUTTON -->
+<!-- ============================================================ -->
+<section class="new-highlight">
+  <div class="highlight-container">
+    <div class="highlight-image">
+      <img src="https://images.unsplash.com/photo-1561501900-3701fa6a0864?w=800" alt="Club pool and lounge area">
+    </div>
+    <div class="highlight-text">
+      <!-- SECTION-1-TITLE -->
+      <h2>World-Class<br>Facilities</h2>
+      <div class="gold-accent"></div>
+      <p>The IBIAN Club offers unparalleled amenities: sophisticated lounges for quiet conversation, grand halls for celebrations, a stunning infinity pool, and a state-of-the-art fitness center. Every space is designed to inspire, relax, and connect — your home away from home.</p>
+      <!-- SECTION-1-BUTTON -->
+      <a href="Pool.html" class="highlight-btn">Explore Amenities <i class="fas fa-swimmer"></i></a>
+    </div>
+  </div>
+</section>
+  
+  
+  
+<!-- ============================================================ -->
+<!-- SECTION 2 - SECOND HIGHLIGHT (Restaurant) -->
+<!-- Ctrl+F: SECTION-2-HIGHLIGHT, SECTION-2-TITLE, SECTION-2-BUTTON -->
+<!-- ============================================================ -->
+<section class="new-highlight-2">
+  <div class="highlight-container reverse">
+    <div class="highlight-image">
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800" alt="Fine dining restaurant at the club">
+    </div>
+    <div class="highlight-text">
+      <!-- SECTION-2-TITLE -->
+      <h2>Culinary<br>Excellence</h2>
+      <div class="gold-accent"></div>
+      <p>Our signature restaurant presents an unforgettable gastronomic journey led by award-winning chefs. From seasonal tasting menus to an exceptional wine cellar, every meal is a celebration of flavor. Private dining rooms and chef's tables make every gathering extraordinary.</p>
+      <!-- SECTION-2-BUTTON -->
+      <a href="Restaurant.html" class="highlight-btn">Discover Our Menu <i class="fas fa-utensils"></i></a>
+    </div>
+  </div>
+</section>
+
+  
+  
+<!-- ============================================================ -->
+<!-- SECTION 3 - THIRD HIGHLIGHT (Past Events) -->
+<!-- Ctrl+F: SECTION-3-HIGHLIGHT, SECTION-3-TITLE, SECTION-3-BUTTON -->
+<!-- ============================================================ -->
+<section class="new-highlight-3">
+  <div class="highlight-container">
+    <div class="highlight-image">
+      <img src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=800" alt="Gala event at the social club">
+    </div>
+    <div class="highlight-text">
+      <!-- SECTION-3-TITLE -->
+      <h2>Iconic<br>Celebrations</h2>
+      <div class="gold-accent"></div>
+      <p>From masquerade balls and jazz nights to exclusive art previews and seasonal festivals, The IBIAN Club has hosted legendary gatherings. Relive the energy of our annual gala, summer solstice parties, and thought-leader salons — each event a masterpiece of social curation.</p>
+      <!-- SECTION-3-BUTTON -->
+      <a href="Event%20Room.html" class="highlight-btn">View Event Archive <i class="fas fa-calendar-alt"></i></a>
+    </div>
+  </div>
+</section>
+  
+  
+
+<!-- PARTNER CAROUSEL - updated with social club partners -->
+<section class="partner-section">
+  <div class="partner-container">
+    <div class="partner-header">
+      <h2>Strategic Alliances</h2>
+      <p>Trusted partners who elevate our member experiences and global reach.</p>
+    </div>
+    <div class="partner-carousel-wrapper">
+      <div class="partner-carousel" id="partnerCarousel"></div>
+      <div class="partner-arrows">
+        <div class="partner-arrow" id="partnerPrev"><i class="fas fa-chevron-left"></i></div>
+        <div class="partner-arrow" id="partnerNext"><i class="fas fa-chevron-right"></i></div>
+      </div>
+    </div>
+  </div>
+  <a href="Partners.html" class="highlight-btn" id="new-twos">View More <i class="fas fa-arrow-right"></i></a>
+</section>
+  
+  
+  
+  <!-- ============================================================ -->
+<!-- SECTION 4 - THIRD HIGHLIGHT (Membership Offer) -->
+<!-- Ctrl+F: SECTION-3-HIGHLIGHT, SECTION-3-TITLE, SECTION-3-BUTTON -->
+<!-- ============================================================ -->
+<section class="new-highlight-3">
+  <div class="highlight-container">
+   
+    <div class="highlight-text membership-container" >
+      <!-- SECTION-3-TITLE -->
+      <h2>Become a <br>Member</h2>
+     
+      <p>Join a community defined by meaningful connections and thoughtfully curated experiences. As a member, you’ll gain access to exclusive events, engaging conversations, and a refined atmosphere designed to bring like-minded individuals together. It’s a space to connect, unwind, and be part of something distinctive.</p>
+      <!-- SECTION-3-BUTTON -->
+      <a href="Membership%20Form.html" class="highlight-btn" id="JoinUs">Join Us <i class="fas fa-calendar-alt"></i></a>
+    </div>
+  </div>
+</section>
+  
+  
+  
+  
+<!-- FOOTER - updated for social club -->
+<footer class="site-footer">
+  <div class="footer-body">
+    <div class="footer-col footer-brand">
+      <img class="footer-logo" src="Logo.png" alt="The IBIAN Club Logo">
+      <p>A premier social club dedicated to excellence, connection, and unforgettable experiences — serving members for over 25 years.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Facebook"><img src="Facebook.png" alt="Facebook"></a>
+        <a href="#" aria-label="Instagram"><img src="Instagram.png" alt="Instagram"></a>
+        <a href="#" aria-label="Twitter"><img src="Twitter.png" alt="Twitter"></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul class="footer-links-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="Our%20History.html">Club Stories</a></li>
+        <li><a href="Members.html">Meet the Curators</a></li>
+        <li><a href="Our%20History.html">About Us</a></li>
+        <li><a href="Our%20History.html">Milestones</a></li>
+        <li><a href="Partners.html">Partnerships</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul class="footer-links-list">
+        <li><a href="Policies.html">Privacy Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+        <li><a href="#">Club Rules</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <div class="footer-contact-item">
+        <i class="fas fa-map-marker-alt"></i>
+        <span>1 IBIAN Lane<br>Beverly Hills, California</span>
+      </div>
+      <div class="footer-contact-item">
+        <i class="fas fa-phone"></i>
+        <a href="tel:+15555555555">+1 555 555 5555</a>
+      </div>
+      <div class="footer-contact-item">
+        <i class="fas fa-envelope"></i>
+        <a href="mailto:concierge@IBIAN.com">concierge@IBIANclub.com</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2015 The IBIAN Club. All rights reserved.</p>
+    <div class="footer-bottom-links">
+      <a href="Policies.html">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="Contact%20Us.html">Membership</a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- LIGHTBOX (unchanged structure) -->
+<div id="lightbox" class="lightbox">
+  <span class="lightbox-close">&times;</span>
+  <span class="lightbox-prev">&#10094;</span>
+  <span class="lightbox-next">&#10095;</span>
+  <img class="lightbox-img" src="" alt="Gallery Image">
+  <div class="lightbox-caption"></div>
+</div>
+
+
+<script>
+
+  /* ============================================================
+     DATA - Updated for social club gallery items
+  ============================================================ */
+
+  const galleryItems = [
+    { src: "https://picsum.photos/seed/1/800/600", title: "Annual Masquerade Gala",     desc: "Our most elegant evening, 2024" },
+    { src: "https://picsum.photos/seed/2/800/600", title: "Jazz on the Terrace",     desc: "Summer nights with live music" },
+    { src: "https://images.unsplash.com/photo-1528605105345-5344ea20e269?w=800", title: "Poolside Cinema Nights",       desc: "Classic films under the stars" },
+    { src: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800", title: "Harvest Feast",    desc: "Seasonal farm-to-table dinner" },
+    { src: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800", title: "Wellness Retreat",      desc: "Mindfulness and movement" },
+    { src: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800", title: "Curator's Art Salon", desc: "Private gallery tour" },
+    { src: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800", title: "New Year's Eve Spectacular",     desc: "Midnight champagne toast" },
+    { src: "https://picsum.photos/seed/3/800/600", title: "Chef's Table Experience",         desc: "Intimate culinary journey" },
+    { src: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800", title: "Charity Polo Match",   desc: "Sporting elegance" },
+    { src: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=800", title: "Spring Soirée",       desc: "Garden party celebration" },
+    { src: "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=800", title: "Wine Connoisseur Dinner",    desc: "Sommelier-led tasting" },
+    { src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800", title: "Gastronomy Gala",     desc: "Michelin-starred collaboration" }
+  ];
+
+  const partners = [
+    { name: "Maison Delvaux",  desc: "Luxury hospitality partner", icon: "fa-champagne-glasses" },
+    { name: "Vinum Cellars",  desc: "Exclusive wine curator", icon: "fa-wine-bottle" },
+    { name: "Artis Capital",      desc: "Cultural programming sponsor",    icon: "fa-palette" },
+    { name: "Elite Wellness",     desc: "Spa and fitness partner",          icon: "fa-spa" },
+    { name: "Savor Events",   desc: "Catering and design excellence",            icon: "fa-cake-candles" },
+    { name: "Harmony Music",      desc: "Live entertainment curation",            icon: "fa-music" }
+  ];
+
+
+  /* ============================================================
+     GALLERY CAROUSEL (same logic, preserved)
+  ============================================================ */
+
+  let currentIndex   = 0;
+  let itemsPerView   = getItemsPerView();
+  const totalItems   = galleryItems.length;
+  let totalSlides    = Math.ceil(totalItems / itemsPerView);
+
+  const carousel        = document.getElementById('galleryCarousel');
+  const prevBtn         = document.getElementById('prevGalleryBtn');
+  const nextBtn         = document.getElementById('nextGalleryBtn');
+  const carouselDots    = document.getElementById('galleryDots');
+  const currentRange    = document.getElementById('currentGalleryRange');
+  const totalItemsSpan  = document.getElementById('totalGalleryItems');
+
+  function getItemsPerView() {
+    if (window.innerWidth <= 768)  return 1;
+    if (window.innerWidth <= 1200) return 2;
+    return 3;
+  }
+
+  function initCarousel() {
+    if (!carousel) return;
+    carousel.innerHTML = '';
+    galleryItems.forEach(item => {
+      carousel.innerHTML += `
+        <div class="gallery-item">
+          <img src="${item.src}" alt="${item.title}" class="gallery-img">
+          <div class="gallery-content">
+            <h3 class="gallery-title">${item.title}</h3>
+            <p class="gallery-desc">${item.desc}</p>
+          </div>
+        </div>`;
+    });
+    if (totalItemsSpan) totalItemsSpan.textContent = totalItems;
+    document.querySelectorAll('.gallery-item').forEach((item, idx) => {
+      item.addEventListener('click', () => openLightbox(idx));
+    });
+    initDots();
+    updateCarousel();
+  }
+
+  function initDots() {
+    if (!carouselDots) return;
+    carouselDots.innerHTML = '';
+    totalSlides = Math.ceil(totalItems / itemsPerView);
+    if (currentIndex >= totalSlides) currentIndex = Math.max(0, totalSlides - 1);
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'carousel-dot';
+      if (i === currentIndex) dot.classList.add('active');
+      dot.addEventListener('click', (function(idx) { return () => goToSlide(idx); })(i));
+      carouselDots.appendChild(dot);
+    }
+  }
+
+  function updateCarousel() {
+    const items = document.querySelectorAll('.gallery-item');
+    if (!items.length) return;
+    const translateX = -currentIndex * (items[0].offsetWidth + 30) * itemsPerView;
+    carousel.style.transform = `translateX(${translateX}px)`;
+    items.forEach((item, idx) => {
+      const active = idx >= currentIndex * itemsPerView && idx < (currentIndex + 1) * itemsPerView;
+      item.classList.toggle('active', active);
+    });
+    document.querySelectorAll('.carousel-dot').forEach((dot, idx) => dot.classList.toggle('active', idx === currentIndex));
+    if (prevBtn) prevBtn.disabled = currentIndex === 0;
+    if (nextBtn) nextBtn.disabled = currentIndex === totalSlides - 1;
+    const start = currentIndex * itemsPerView + 1;
+    const end   = Math.min((currentIndex + 1) * itemsPerView, totalItems);
+    if (currentRange) currentRange.textContent = `${start}-${end}`;
+  }
+
+  function goToSlide(idx) { currentIndex = idx; updateCarousel(); }
+  function nextSlide()    { if (currentIndex < totalSlides - 1) { currentIndex++; updateCarousel(); } }
+  function prevSlide()    { if (currentIndex > 0)               { currentIndex--; updateCarousel(); } }
+
+  function handleGalleryResize() {
+    const n = getItemsPerView();
+    if (n !== itemsPerView) { itemsPerView = n; initDots(); updateCarousel(); }
+  }
+
+
+  /* ============================================================
+     PARTNER CAROUSEL (preserved)
+  ============================================================ */
+
+  let partnerIndex    = 0;
+  let partnerPerView  = getPartnerPerView();
+  const partnerEl     = document.getElementById('partnerCarousel');
+  const partnerPrevBtn = document.getElementById('partnerPrev');
+  const partnerNextBtn = document.getElementById('partnerNext');
+
+  function getPartnerPerView() {
+    if (window.innerWidth <= 550)  return 1;
+    if (window.innerWidth <= 800)  return 2;
+    if (window.innerWidth <= 1100) return 3;
+    return 4;
+  }
+
+  function buildPartnerCarousel() {
+    if (!partnerEl) return;
+    partnerEl.innerHTML = '';
+    partners.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'partner-card';
+      card.innerHTML = `
+        <div class="partner-logo"><i class="fas ${p.icon}"></i></div>
+        <div class="partner-name">${p.name}</div>
+        <div class="partner-desc">${p.desc}</div>`;
+      partnerEl.appendChild(card);
+    });
+    updatePartnerCarousel();
+  }
+
+  function updatePartnerCarousel() {
+    const maxIndex = Math.ceil(partners.length / partnerPerView) - 1;
+    if (partnerIndex > maxIndex) partnerIndex = Math.max(0, maxIndex);
+    partnerEl.style.transform = `translateX(${-partnerIndex * 100}%)`;
+    if (partnerPrevBtn) partnerPrevBtn.style.opacity = partnerIndex === 0       ? '0.4' : '1';
+    if (partnerNextBtn) partnerNextBtn.style.opacity = partnerIndex >= maxIndex ? '0.4' : '1';
+  }
+
+  function partnerNext() {
+    if (partnerIndex < Math.ceil(partners.length / partnerPerView) - 1) { partnerIndex++; updatePartnerCarousel(); }
+  }
+  function partnerPrev() {
+    if (partnerIndex > 0) { partnerIndex--; updatePartnerCarousel(); }
+  }
+
+  function handlePartnerResize() {
+    const n = getPartnerPerView();
+    if (n !== partnerPerView) { partnerPerView = n; partnerIndex = 0; updatePartnerCarousel(); }
+  }
+
+
+  /* ============================================================
+     LIGHTBOX (preserved)
+  ============================================================ */
+
+  const lightbox        = document.getElementById('lightbox');
+  const lightboxImg     = document.querySelector('.lightbox-img');
+  const lightboxCaption = document.querySelector('.lightbox-caption');
+  let currentImageIndex = 0;
+
+  function openLightbox(index) {
+    currentImageIndex = index;
+    updateLightboxContent();
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function updateLightboxContent() {
+    const item = galleryItems[currentImageIndex];
+    lightboxImg.src = item.src;
+    lightboxCaption.innerHTML = `<strong>${item.title}</strong> — ${item.desc}`;
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function nextImage() { currentImageIndex = (currentImageIndex + 1) % galleryItems.length; updateLightboxContent(); }
+  function prevImage() { currentImageIndex = (currentImageIndex - 1 + galleryItems.length) % galleryItems.length; updateLightboxContent(); }
+
+  document.querySelector('.lightbox-close')?.addEventListener('click', closeLightbox);
+  document.querySelector('.lightbox-next')?.addEventListener('click', nextImage);
+  document.querySelector('.lightbox-prev')?.addEventListener('click', prevImage);
+  lightbox?.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', e => {
+    if (!lightbox?.classList.contains('active')) return;
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'ArrowRight') nextImage();
+    if (e.key === 'ArrowLeft')  prevImage();
+  });
+
+
+  /* ============================================================
+     NAVIGATION & HERO SLIDER (jQuery - preserved)
+  ============================================================ */
+
+  (function($) {
+    $(function() {
+
+      // Dropdown toggle
+      $('nav ul li > a:not(:only-child)').on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const $parent   = $(this).parent('li');
+        const $dropdown = $(this).siblings('.nav-dropdown');
+        const isOpen    = $dropdown.hasClass('open');
+        $('.nav-dropdown').removeClass('open');
+        $('nav ul li').removeClass('dropdown-open');
+        if (!isOpen) {
+          $dropdown.addClass('open');
+          $parent.addClass('dropdown-open');
+        }
+      });
+
+      $('html').on('click', function() {
+        $('.nav-dropdown').removeClass('open');
+        $('nav ul li').removeClass('dropdown-open');
+      });
+
+      // Mobile hamburger
+      $('#nav-toggle').on('click', function(e) {
+        e.preventDefault();
+        $('nav ul').slideToggle();
+        $(this).toggleClass('active');
+      });
+
+      // Hero slider
+      const $slides        = $('.slide');
+      const $dotsContainer = $('.dots');
+      let heroIndex        = 0;
+
+      $slides.each(function(i) {
+        const $dot = $("<div class='dot'></div>");
+        if (i === 0) $dot.addClass('active');
+        $dot.on('click', () => showSlide(i));
+        $dotsContainer.append($dot);
+      });
+
+      const $dots = $('.dot');
+
+      function showSlide(i) {
+        $slides.removeClass('active');
+        $dots.removeClass('active');
+        $($slides[i]).addClass('active');
+        $($dots[i]).addClass('active');
+        heroIndex = i;
+      }
+
+      $('.right').on('click', () => showSlide((heroIndex + 1) % $slides.length));
+      $('.left').on('click',  () => showSlide((heroIndex - 1 + $slides.length) % $slides.length));
+      setInterval(() => showSlide((heroIndex + 1) % $slides.length), 7000);
+
+      // Parallax on scroll
+      function handleParallax() {
+        const heroHeight = $('.hero').outerHeight();
+        const scrollTop  = $(window).scrollTop();
+        const start      = heroHeight + 70 - $(window).height();
+        if (scrollTop > start) {
+          const amount = Math.min(1, (scrollTop - start) / heroHeight);
+          $('.slides').css('transform', `translateY(${amount * heroHeight * 0.3}px)`);
+        } else {
+          $('.slides').css('transform', 'translateY(0)');
+        }
+      }
+
+      $(window).on('scroll', handleParallax);
+      handleParallax();
+
+    });
+  })(jQuery);
+
+
+  /* ============================================================
+     INIT (preserved)
+  ============================================================ */
+
+  document.addEventListener('DOMContentLoaded', function() {
+    initCarousel();
+    buildPartnerCarousel();
+
+    if (prevBtn)      prevBtn.addEventListener('click', prevSlide);
+    if (nextBtn)      nextBtn.addEventListener('click', nextSlide);
+    if (partnerPrevBtn) partnerPrevBtn.addEventListener('click', partnerPrev);
+    if (partnerNextBtn) partnerNextBtn.addEventListener('click', partnerNext);
+
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => { handleGalleryResize(); handlePartnerResize(); }, 250);
+    });
+  });
+
+</script>
+</body>
+</html>
